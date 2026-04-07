@@ -1,0 +1,6 @@
+# Mock 23andMe-style file
+# rsid chromosome position genotype
+rs762551 7 24966446 AC
+rs4988235 2 136608646 CT
+rs1801260 4 56307853 TT
+rs1815739 11 66560624 CT
