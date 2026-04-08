@@ -1,15 +1,18 @@
 # GeneWise
 
-GeneWise is a front-end prototype that explores how consumer DNA data could be translated into simple, user-facing wellness insights.
+## Live Demo
+https://genewise-flame.vercel.app/
 
-The idea behind the project is to take raw genotype data (like what you get from 23andMe) and map it into categories people actually care about — things like sleep patterns, nutrition, fitness tendencies, and skin-related traits.
+GeneWise is a front-end web app that explores how consumer DNA data could be translated into simple, user-facing wellness insights.
+
+The project is built around the idea of taking raw genotype data, like what users receive from services such as 23andMe, and organizing it into categories that feel more relevant and understandable in a consumer product setting.
 
 ## What it does
 
-- Uploads a raw DNA-style text file (simulated)
-- Parses genetic markers locally in the browser
-- Generates an example “wellness report”
-- Breaks results into readable sections:
+- Simulates upload of a raw DNA-style text file
+- Parses genotype markers locally in the browser
+- Generates an example wellness insight report
+- Organizes results into sections like:
   - Sleep
   - Fitness
   - Nutrition
@@ -17,22 +20,22 @@ The idea behind the project is to take raw genotype data (like what you get from
   - Caffeine response
   - Lactose digestion
 
-This is not meant to be medically accurate — it’s a product concept showing how this kind of data could be presented in a clean, accessible way.
+## Why I built it
 
-## Why I built this
+I wanted to explore the intersection of biotech and software, especially how genomic data could be presented in a way that feels clearer, more structured, and more useful to everyday users.
 
-I’m interested in the intersection of biotech and software, especially how complex biological data can be turned into something usable for everyday people.
+A lot of consumer genomics products either surface raw data or give very broad summaries. This project was my way of thinking through what a more polished, product-oriented experience could look like.
 
-Most consumer genomics platforms give you raw data or very broad summaries — I wanted to explore what a more structured, UI-focused experience could look like.
+## Tech Stack
 
-## Tech used
-
-- React (Vite)
+- React
+- Vite
 - JavaScript
 - CSS
+- Vercel
 
 ## Notes
 
-- All processing is done locally (no backend)
-- The genetic interpretations are simplified and for demonstration only
-- This is a prototype, not a clinical or diagnostic tool
+- All processing is done locally in the browser
+- The genetic interpretations are simplified and for demonstration purposes only
+- This is a prototype, not a diagnostic or clinical tool
