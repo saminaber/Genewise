@@ -3,7 +3,9 @@ import { useMemo, useState } from "react";
 const demoFile = `rs762551 7 24966446 AC
 rs4988235 2 136608646 CT
 rs1801260 4 56307853 TT
-rs1815739 11 66560624 CT`;
+rs1815739 11 66560624 CT
+rs12913832 15 28365618 AG
+rs174537 11 61571478 GG`;
 
 function parseDNA(text) {
   return text
@@ -26,6 +28,8 @@ function buildReport(rows) {
   const lactose = getGenotype(rows, "rs4988235");
   const sleep = getGenotype(rows, "rs1801260");
   const muscle = getGenotype(rows, "rs1815739");
+  const skin = getGenotype(rows, "rs12913832");
+  const nutrition = getGenotype(rows, "rs174537");
 
   return [
     {
@@ -88,7 +92,111 @@ function buildReport(rows) {
       nextStep:
         "Use this as a conversation starter for training style, not as a hard biological limit.",
     },
+    {
+      title: "Skin Profile",
+      genotype: skin,
+      interpretation:
+        "Educational context for pigmentation, UV response, and visible skin-trait context.",
+      meaning:
+        skin === "AA"
+          ? "This pattern may align with a stronger tendency toward lighter pigmentation-related traits in simplified models."
+          : skin === "AG" || skin === "GA"
+          ? "This pattern may align with an intermediate pigmentation context in simplified models."
+          : skin === "GG"
+          ? "This pattern may align with darker pigmentation-related context in simplified models."
+          : "No matching marker was found in the current file.",
+      nextStep:
+        "Use this as light educational context around UV exposure habits and skin-awareness routines, not as a cosmetic or medical conclusion.",
+    },
+    {
+      title: "Nutrition Lipid Context",
+      genotype: nutrition,
+      interpretation:
+        "Educational context for fatty-acid metabolism and broader nutrition-response framing.",
+      meaning:
+        nutrition === "GG"
+          ? "This pattern may align with a stronger omega-fatty-acid processing context in simplified nutrition models."
+          : nutrition === "GT" || nutrition === "TG"
+          ? "This pattern may suggest a more mixed lipid-metabolism context."
+          : nutrition === "TT"
+          ? "This pattern may suggest a less efficient conversion pattern in simplified educational models."
+          : "No matching marker was found in the current file.",
+      nextStep:
+        "Use this as a prompt to think about dietary patterns and nutrition questions, not as a prescription or deficiency diagnosis.",
+    },
   ];
+}
+
+function GeneWiseLogo() {
+  return (
+    <div className="brand-icon brand-logo" aria-hidden="true">
+      <span className="logo-ring logo-ring-a" />
+      <span className="logo-ring logo-ring-b" />
+      <span className="logo-dot" />
+    </div>
+  );
+}
+
+function HeroNetwork() {
+  const nodes = [
+    { top: "8%", left: "4%" },
+    { top: "20%", left: "18%" },
+    { top: "10%", left: "34%" },
+    { top: "28%", left: "46%" },
+    { top: "16%", left: "63%" },
+    { top: "8%", left: "82%" },
+    { top: "34%", left: "88%" },
+    { top: "48%", left: "71%" },
+    { top: "42%", left: "52%" },
+    { top: "62%", left: "38%" },
+    { top: "70%", left: "18%" },
+    { top: "82%", left: "8%" },
+    { top: "78%", left: "58%" },
+    { top: "70%", left: "84%" },
+  ];
+
+  const lines = [
+    ["4%", "8%", "18%", "20%"],
+    ["18%", "20%", "34%", "10%"],
+    ["34%", "10%", "46%", "28%"],
+    ["46%", "28%", "63%", "16%"],
+    ["63%", "16%", "82%", "8%"],
+    ["82%", "8%", "88%", "34%"],
+    ["63%", "16%", "71%", "48%"],
+    ["46%", "28%", "52%", "42%"],
+    ["52%", "42%", "38%", "62%"],
+    ["38%", "62%", "18%", "70%"],
+    ["18%", "70%", "8%", "82%"],
+    ["52%", "42%", "58%", "78%"],
+    ["58%", "78%", "84%", "70%"],
+    ["71%", "48%", "84%", "70%"],
+    ["18%", "20%", "18%", "70%"],
+    ["34%", "10%", "52%", "42%"],
+    ["46%", "28%", "71%", "48%"],
+  ];
+
+  return (
+    <div className="network-graphic" aria-hidden="true">
+      {lines.map((line, i) => (
+        <svg key={i} className="network-line">
+          <line
+            x1={line[0]}
+            y1={line[1]}
+            x2={line[2]}
+            y2={line[3]}
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
+      ))}
+      {nodes.map((node, i) => (
+        <span
+          key={i}
+          className="network-node"
+          style={{ top: node.top, left: node.left }}
+        />
+      ))}
+    </div>
+  );
 }
 
 export default function App() {
@@ -146,7 +254,7 @@ export default function App() {
 
       <header className="topbar">
         <div className="brand">
-          <div className="brand-icon">G</div>
+          <GeneWiseLogo />
           <div>
             <h1>GeneWise</h1>
             <p>Consumer genetics wellness platform</p>
@@ -168,86 +276,58 @@ export default function App() {
 
       {page === "home" && (
         <main className="page">
-          <section className="hero">
-            <div className="hero-copy">
-              <div className="eyebrow">Genetics-informed wellness exploration</div>
-              <h2>Consumer DNA data, translated into clearer wellness insight</h2>
-              <p>
-                GeneWise is a concept platform that transforms consumer genotype
-                data into structured, educational insight categories across sleep,
-                fitness, nutrition, and skin / immune sensitivity context.
+          <section className="hero-banner">
+            <HeroNetwork />
+
+            <div className="hero-banner-content">
+              <div className="eyebrow hero-eyebrow">
+                Genetics-informed wellness exploration
+              </div>
+              <h2>
+                Consumer DNA data,
+                <br />
+                translated into structured
+                <br />
+                wellness insight
+              </h2>
+              <p className="hero-banner-copy">
+                GeneWise is a concept platform that transforms consumer
+                genotype data into educational insight categories across
+                sleep, fitness, nutrition, skin, and immune sensitivity.
               </p>
-              <p>
-                The goal is to make personal genomic information more accessible
-                through simplified reporting that supports awareness, not diagnosis.
+              <p className="hero-banner-copy">
+                The goal is to make personal genomic information easier to
+                explore through clean, non-diagnostic reporting designed for
+                awareness and self-education.
               </p>
 
               <div className="hero-actions">
                 <button className="primary-btn" onClick={() => setPage("upload")}>
                   Start with DNA Upload
                 </button>
-                <button className="ghost-btn" onClick={() => setPage("report")}>
+                <button className="ghost-btn hero-ghost" onClick={() => setPage("report")}>
                   Explore Sample Report
                 </button>
               </div>
+            </div>
 
-              <div className="hero-meta">
-                <span>Educational insights</span>
-                <span>Privacy-conscious framing</span>
-                <span>Non-diagnostic reporting</span>
+            <div className="hero-stats">
+              <div className="hero-stat">
+                <div className="hero-stat-value">6</div>
+                <div className="hero-stat-label">report sections</div>
               </div>
-            </div>
-
-            <div className="hero-panel">
-              <div className="panel-card">
-                <div className="panel-top">
-                  <span className="pill">Platform Preview</span>
-                  <span className="pill muted-pill">{rows.length} markers</span>
-                </div>
-
-                <div className="mini-grid">
-                  <div className="mini-card">
-                    <div className="mini-title">Sleep</div>
-                    <div className="mini-sub">Timing and recovery context</div>
-                  </div>
-                  <div className="mini-card">
-                    <div className="mini-title">Fitness</div>
-                    <div className="mini-sub">Exercise response tendencies</div>
-                  </div>
-                  <div className="mini-card">
-                    <div className="mini-title">Nutrition</div>
-                    <div className="mini-sub">Metabolic trait summaries</div>
-                  </div>
-                  <div className="mini-card">
-                    <div className="mini-title">Skin / Immune</div>
-                    <div className="mini-sub">Sensitivity-oriented context</div>
-                  </div>
-                </div>
-
-                <div className="panel-note">
-                  Designed to convert raw genotype data into a structured,
-                  user-friendly wellness reporting experience.
-                </div>
+              <div className="hero-stat">
+                <div className="hero-stat-value">Local</div>
+                <div className="hero-stat-label">DNA parsing workflow</div>
               </div>
-            </div>
-          </section>
-
-          <section className="stats-row">
-            <div className="stat-card">
-              <div className="stat-value">4</div>
-              <div className="stat-label">core wellness categories</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-value">Local</div>
-              <div className="stat-label">file parsing workflow</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-value">Clear</div>
-              <div className="stat-label">scientific framing</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-value">Modern</div>
-              <div className="stat-label">multi-page product demo</div>
+              <div className="hero-stat">
+                <div className="hero-stat-value">Clear</div>
+                <div className="hero-stat-label">scientific framing</div>
+              </div>
+              <div className="hero-stat">
+                <div className="hero-stat-value">Modern</div>
+                <div className="hero-stat-label">consumer-style interface</div>
+              </div>
             </div>
           </section>
 
@@ -400,6 +480,11 @@ export default function App() {
                   <div className="report-section">
                     <div className="report-label">Suggested next step</div>
                     <p>{card.nextStep}</p>
+                  </div>
+
+                  <div className="report-chip-row">
+                    <span className="report-chip">Consumer DNA context</span>
+                    <span className="report-chip">Educational only</span>
                   </div>
                 </div>
               ))}
