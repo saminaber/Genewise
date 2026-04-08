@@ -1,111 +1,38 @@
-<<<<<<< HEAD
-# Genewise
-# GeneWise 🧬
-
-**DNA Wellness Platform Prototype**
-
-GeneWise is a React-based prototype for a consumer genetics wellness platform.
-It allows users to upload a mock raw DNA file, parse genotype data, and generate simplified educational health insights.
-
----
-
-## 🚀 Features
-
-* Upload mock 23andMe-style DNA files
-* Parse raw genotype data (rsid, chromosome, genotype)
-* Generate sample wellness reports (sleep, caffeine, nutrition, fitness)
-* Multi-page UI (Upload, Report, Privacy, Roadmap)
-* Ethical and non-diagnostic product framing
-
----
-
-## 🧠 What this project demonstrates
-
-* Bioinformatics fundamentals (genotype parsing)
-* Frontend product design for biotech applications
-* Understanding of privacy and ethical constraints in genetics
-* Translation of scientific data into user-facing insights
-
----
-
-## ⚠️ Important Disclaimer
-
-This project is a **software prototype for educational and portfolio purposes only**.
-
-* It does NOT provide medical advice
-* It is NOT clinically validated
-* It does NOT perform real genetic testing
-
-Most health traits are influenced by both **genetics and environment**, and this app reflects simplified associations only.
-
----
-
-## 🛠 Tech Stack
-
-* React
-* Tailwind CSS
-* Framer Motion
-* Lucide Icons
-
----
-
-## 📂 How to Run
-=======
 # GeneWise
 
-GeneWise is a React-based prototype for a consumer genetics wellness platform.
+GeneWise is a front-end prototype that explores how consumer DNA data could be translated into simple, user-facing wellness insights.
 
-It allows users to upload a mock raw DNA file, parse genotype rows locally, and generate simplified educational trait reports with strong privacy and non-diagnostic framing.
+The idea behind the project is to take raw genotype data (like what you get from 23andMe) and map it into categories people actually care about — things like sleep patterns, nutrition, fitness tendencies, and skin-related traits.
 
-## Features
+## What it does
 
-- mock 23andMe-style DNA upload
-- local genotype parsing
-- sample wellness report generation
-- privacy and ethics section
-- roadmap section for future phases
+- Uploads a raw DNA-style text file (simulated)
+- Parses genetic markers locally in the browser
+- Generates an example “wellness report”
+- Breaks results into readable sections:
+  - Sleep
+  - Fitness
+  - Nutrition
+  - Skin profile
+  - Caffeine response
+  - Lactose digestion
 
-## Important note
+This is not meant to be medically accurate — it’s a product concept showing how this kind of data could be presented in a clean, accessible way.
 
-This project is a software and portfolio prototype only.
+## Why I built this
 
-- It does not provide medical advice
-- It is not clinically validated
-- It does not perform real genetic testing
-- It uses simplified educational trait logic
+I’m interested in the intersection of biotech and software, especially how complex biological data can be turned into something usable for everyday people.
 
-Most health traits are influenced by both genetics and environment.
+Most consumer genomics platforms give you raw data or very broad summaries — I wanted to explore what a more structured, UI-focused experience could look like.
 
-## Run locally
->>>>>>> 8ad4603 (Upload GeneWise project)
+## Tech used
 
-```bash
-npm install
-npm run dev
-```
+- React (Vite)
+- JavaScript
+- CSS
 
-<<<<<<< HEAD
----
+## Notes
 
-## 🔮 Future Roadmap
-
-* Expanded mock SNP database
-* Improved trait interpretation logic
-* Secure file handling simulation
-* Potential future lab integration (with proper approvals)
-
----
-
-## 👤 Author
-
-Built as a biotech + software portfolio project.
-
-=======
-## Good resume framing
-
-GeneWise — Genetics Wellness Platform Prototype
-
-- Built a React-based biotech prototype that parses mock genotype files and generates user-facing educational wellness reports
-- Implemented local raw text parsing for SNP-style data and mapped markers to simplified trait insights
-- Designed privacy, ethics, and non-diagnostic framing appropriate for a consumer genetics concept
->>>>>>> 8ad4603 (Upload GeneWise project)
+- All processing is done locally (no backend)
+- The genetic interpretations are simplified and for demonstration only
+- This is a prototype, not a clinical or diagnostic tool
