@@ -1,4 +1,3 @@
- // src/App.jsx
 import { useMemo, useState } from "react";
 
 const demoFile = `rs762551 7 24966446 AC
@@ -266,8 +265,36 @@ export default function App() {
   const [rows, setRows] = useState(parseDNA(demoFile));
   const [status, setStatus] = useState("Demo data loaded successfully.");
   const [fileName, setFileName] = useState("demo-dna-file.txt");
+  const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const report = useMemo(() => buildReport(rows), [rows]);
+
+  async function handleWaitlistSubmit(e) {
+    e.preventDefault();
+    setSubmitError("");
+
+    const formData = new FormData(e.target);
+
+    try {
+      const res = await fetch("https://formspree.io/f/xgopbjlb", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (res.ok) {
+        setSubmitted(true);
+        e.target.reset();
+      } else {
+        setSubmitError("Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      setSubmitError("Something went wrong. Please try again.");
+    }
+  }
 
   function upload(e) {
     const file = e.target.files?.[0];
@@ -426,16 +453,9 @@ export default function App() {
             <section className="section">
               <div className="container">
                 <form
-  className="waitlist-card waitlist-card-premium"
-  action="https://formspree.io/f/xgopbjlb"
-  method="POST"
->
-  <input
-    type="hidden"
-    name="_next"
-    value="https://genewise-flame.vercel.app/"
-  />
-                
+                  className="waitlist-card waitlist-card-premium"
+                  onSubmit={handleWaitlistSubmit}
+                >
                   <div className="waitlist-copy">
                     <span className="waitlist-kicker">Early access</span>
                     <h3>Join the GeneWise waitlist</h3>
@@ -445,16 +465,26 @@ export default function App() {
                     </p>
                   </div>
 
-                  <div className="waitlist-fields">
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Enter your email"
-                      required
-                    />
-                    <button type="submit" className="btn btn-primary">
-                      Join Waitlist
-                    </button>
+                  <div className="waitlist-form-block">
+                    {submitted ? (
+                      <div className="success-message">You're on the waitlist.</div>
+                    ) : (
+                      <div className="waitlist-fields">
+                        <input
+                          type="email"
+                          name="email"
+                          placeholder="Enter your email"
+                          required
+                        />
+                        <button type="submit" className="btn btn-primary">
+                          Join Waitlist
+                        </button>
+                      </div>
+                    )}
+
+                    {submitError ? (
+                      <div className="error-message">{submitError}</div>
+                    ) : null}
                   </div>
                 </form>
               </div>
@@ -588,11 +618,7 @@ export default function App() {
                   </p>
 
                   <label className="file-input-wrap">
-                    <input
-                      type="file"
-                      accept=".txt,.csv"
-                      onChange={upload}
-                    />
+                    <input type="file" accept=".txt,.csv" onChange={upload} />
                     <span className="btn btn-primary">Choose File</span>
                   </label>
 

@@ -1,4 +1,3 @@
-/* src/index.css */
 :root {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
@@ -495,8 +494,8 @@ a {
 }
 
 .fp-2 {
-  top: 38%;
-  left: 47%;
+  top: 34%;
+  left: 48%;
   animation-delay: 2s;
 }
 
@@ -849,11 +848,14 @@ a {
   max-width: 760px;
 }
 
+.waitlist-form-block {
+  min-width: 430px;
+}
+
 .waitlist-fields {
   display: grid;
   grid-template-columns: minmax(280px, 1fr) auto;
   gap: 12px;
-  min-width: 430px;
 }
 
 .waitlist-fields input {
@@ -869,6 +871,21 @@ a {
 
 .waitlist-fields input::placeholder {
   color: #86a0bf;
+}
+
+.success-message {
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: rgba(80, 200, 140, 0.12);
+  border: 1px solid rgba(80, 200, 140, 0.35);
+  color: #b6f5d3;
+  font-weight: 600;
+}
+
+.error-message {
+  margin-top: 10px;
+  color: #ffb3b3;
+  font-size: 0.92rem;
 }
 
 .section-heading {
@@ -1404,9 +1421,13 @@ a {
     align-items: flex-start;
   }
 
-  .waitlist-fields {
+  .waitlist-form-block {
     min-width: 0;
     width: 100%;
+  }
+
+  .waitlist-fields {
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .split-cta-actions {
