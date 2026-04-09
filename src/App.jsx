@@ -426,11 +426,16 @@ export default function App() {
             <section className="section">
               <div className="container">
                 <form
-                  className="waitlist-card waitlist-card-premium"
-                  action="https://formspree.io/f/xgopbjlb"
-                  method="POST"
-                  <input type="hidden" name="_next" value="https://genewise-flame.vercel.app/" />
-                >
+  className="waitlist-card waitlist-card-premium"
+  action="https://formspree.io/f/xgopbjlb"
+  method="POST"
+>
+  <input
+    type="hidden"
+    name="_next"
+    value="https://genewise-flame.vercel.app/"
+  />
+                
                   <div className="waitlist-copy">
                     <span className="waitlist-kicker">Early access</span>
                     <h3>Join the GeneWise waitlist</h3>
