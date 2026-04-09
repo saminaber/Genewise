@@ -429,6 +429,7 @@ export default function App() {
                   className="waitlist-card waitlist-card-premium"
                   action="https://formspree.io/f/xgopbjlb"
                   method="POST"
+                  <input type="hidden" name="_next" value="https://genewise-flame.vercel.app/" />
                 >
                   <div className="waitlist-copy">
                     <span className="waitlist-kicker">Early access</span>
