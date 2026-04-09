@@ -1,3 +1,4 @@
+ // src/App.jsx
 import { useMemo, useState } from "react";
 
 const demoFile = `rs762551 7 24966446 AC
@@ -12,9 +13,7 @@ function parseDNA(text) {
     .split("\n")
     .map((line) => {
       const parts = line.trim().split(/\s+/);
-      return parts.length >= 4
-        ? { rsid: parts[0], genotype: parts[3] }
-        : null;
+      return parts.length >= 4 ? { rsid: parts[0], genotype: parts[3] } : null;
     })
     .filter(Boolean);
 }
@@ -45,7 +44,7 @@ function buildReport(rows) {
           ? "This pattern may align with slower caffeine metabolism in simplified models."
           : "No matching marker was found in the current file.",
       nextStep:
-        "Use as general context for daily caffeine timing, not as a medical recommendation.",
+        "Use as general context for caffeine timing, not as a medical recommendation.",
     },
     {
       title: "Lactose Digestion",
@@ -83,9 +82,9 @@ function buildReport(rows) {
       interpretation: "Educational context for exercise response tendency.",
       meaning:
         muscle === "CC"
-          ? "This pattern may be framed as stronger fast-twitch tendency in simplified models."
+          ? "This pattern may be framed as a stronger fast-twitch tendency in simplified models."
           : muscle === "TT"
-          ? "This pattern may be framed as stronger endurance-oriented tendency."
+          ? "This pattern may be framed as a stronger endurance-oriented tendency."
           : muscle === "CT" || muscle === "TC"
           ? "This pattern may suggest a mixed training response profile."
           : "No matching marker was found in the current file.",
@@ -93,13 +92,13 @@ function buildReport(rows) {
         "Use this as a conversation starter for training style, not as a hard biological limit.",
     },
     {
-      title: "Skin Profile",
+      title: "Skin / Sensitivity",
       genotype: skin,
       interpretation:
-        "Educational context for pigmentation, UV response, and visible skin-trait context.",
+        "Educational context for pigmentation, UV response, and visible skin-trait framing.",
       meaning:
         skin === "AA"
-          ? "This pattern may align with a stronger tendency toward lighter pigmentation-related traits in simplified models."
+          ? "This pattern may align with lighter pigmentation-related traits in simplified models."
           : skin === "AG" || skin === "GA"
           ? "This pattern may align with an intermediate pigmentation context in simplified models."
           : skin === "GG"
@@ -129,72 +128,135 @@ function buildReport(rows) {
 
 function GeneWiseLogo() {
   return (
-    <div className="brand-icon brand-logo" aria-hidden="true">
-      <span className="logo-ring logo-ring-a" />
-      <span className="logo-ring logo-ring-b" />
-      <span className="logo-dot" />
+    <div className="brand">
+      <div className="brand-mark" aria-hidden="true">
+        <span className="orbit orbit-one" />
+        <span className="orbit orbit-two" />
+        <span className="orbit-dot" />
+      </div>
+      <div className="brand-copy">
+        <span className="brand-name">GeneWise</span>
+        <span className="brand-tag">Consumer genetics wellness platform</span>
+      </div>
     </div>
   );
 }
 
-function HeroNetwork() {
-  const nodes = [
-    { top: "8%", left: "4%" },
-    { top: "20%", left: "18%" },
-    { top: "10%", left: "34%" },
-    { top: "28%", left: "46%" },
-    { top: "16%", left: "63%" },
-    { top: "8%", left: "82%" },
-    { top: "34%", left: "88%" },
-    { top: "48%", left: "71%" },
-    { top: "42%", left: "52%" },
-    { top: "62%", left: "38%" },
-    { top: "70%", left: "18%" },
-    { top: "82%", left: "8%" },
-    { top: "78%", left: "58%" },
-    { top: "70%", left: "84%" },
-  ];
-
-  const lines = [
-    ["4%", "8%", "18%", "20%"],
-    ["18%", "20%", "34%", "10%"],
-    ["34%", "10%", "46%", "28%"],
-    ["46%", "28%", "63%", "16%"],
-    ["63%", "16%", "82%", "8%"],
-    ["82%", "8%", "88%", "34%"],
-    ["63%", "16%", "71%", "48%"],
-    ["46%", "28%", "52%", "42%"],
-    ["52%", "42%", "38%", "62%"],
-    ["38%", "62%", "18%", "70%"],
-    ["18%", "70%", "8%", "82%"],
-    ["52%", "42%", "58%", "78%"],
-    ["58%", "78%", "84%", "70%"],
-    ["71%", "48%", "84%", "70%"],
-    ["18%", "20%", "18%", "70%"],
-    ["34%", "10%", "52%", "42%"],
-    ["46%", "28%", "71%", "48%"],
-  ];
-
+function HeroBackground() {
   return (
-    <div className="network-graphic" aria-hidden="true">
-      {lines.map((line, i) => (
-        <svg key={i} className="network-line">
-          <line
-            x1={line[0]}
-            y1={line[1]}
-            x2={line[2]}
-            y2={line[3]}
-            vectorEffect="non-scaling-stroke"
-          />
-        </svg>
-      ))}
-      {nodes.map((node, i) => (
-        <span
-          key={i}
-          className="network-node"
-          style={{ top: node.top, left: node.left }}
-        />
-      ))}
+    <div className="hero-bg-art" aria-hidden="true">
+      <span className="bg-glow bg-glow-1" />
+      <span className="bg-glow bg-glow-2" />
+      <span className="bg-glow bg-glow-3" />
+      <span className="bg-glow bg-glow-4" />
+
+      <span className="hero-noise" />
+
+      <span className="grid-v g1" />
+      <span className="grid-v g2" />
+      <span className="grid-v g3" />
+      <span className="grid-v g4" />
+      <span className="grid-v g5" />
+      <span className="grid-h gh1" />
+      <span className="grid-h gh2" />
+      <span className="grid-h gh3" />
+      <span className="grid-h gh4" />
+
+      <span className="net-line l1" />
+      <span className="net-line l2" />
+      <span className="net-line l3" />
+      <span className="net-line l4" />
+      <span className="net-line l5" />
+      <span className="net-line l6" />
+
+      <span className="net-node n1" />
+      <span className="net-node n2" />
+      <span className="net-node n3" />
+      <span className="net-node n4" />
+      <span className="net-node n5" />
+      <span className="net-node n6" />
+      <span className="net-node n7" />
+      <span className="net-node n8" />
+
+      <div className="floating-panel fp-1 meaningful-panel">
+        <span>Input layer</span>
+        <strong>Raw SNP markers detected</strong>
+        <small>rs762551 · rs4988235 · rs1801260</small>
+      </div>
+
+      <div className="floating-panel fp-2 meaningful-panel">
+        <span>Privacy model</span>
+        <strong>Local browser parsing</strong>
+        <small>Prototype workflow keeps file handling client-side</small>
+      </div>
+
+      <div className="floating-panel fp-3 meaningful-panel">
+        <span>Output layer</span>
+        <strong>Structured wellness report</strong>
+        <small>Sleep · Fitness · Nutrition · Skin</small>
+      </div>
+    </div>
+  );
+}
+
+function HeroSignalPanel() {
+  return (
+    <div className="hero-signal-panel">
+      <div className="signal-header">
+        <span className="signal-kicker">Prototype signal map</span>
+        <span className="signal-chip">Local parsing</span>
+      </div>
+
+      <div className="signal-core">
+        <div className="signal-data-stream">
+          <span>rs762551</span>
+          <span>rs4988235</span>
+          <span>rs1801260</span>
+          <span>rs1815739</span>
+          <span>rs12913832</span>
+          <span>rs174537</span>
+        </div>
+
+        <div className="signal-ring signal-ring-1" />
+        <div className="signal-ring signal-ring-2" />
+        <div className="signal-ring signal-ring-3" />
+
+        <div className="signal-center">
+          <span>GeneWise</span>
+          <strong>Insight Engine</strong>
+        </div>
+
+        <div className="signal-node-card node-card-a">
+          <span>Sleep</span>
+          <strong>Circadian context</strong>
+        </div>
+        <div className="signal-node-card node-card-b">
+          <span>Fitness</span>
+          <strong>Recovery profile</strong>
+        </div>
+        <div className="signal-node-card node-card-c">
+          <span>Nutrition</span>
+          <strong>Metabolic signals</strong>
+        </div>
+        <div className="signal-node-card node-card-d">
+          <span>Skin</span>
+          <strong>Sensitivity framing</strong>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SleepVisual() {
+  return (
+    <div className="abstract-visual sleep-visual" aria-hidden="true">
+      <span className="moon-shape" />
+      <span className="sleep-dot dot-a" />
+      <span className="sleep-dot dot-b" />
+      <span className="sleep-dot dot-c" />
+      <span className="sleep-wave wave-1" />
+      <span className="sleep-wave wave-2" />
+      <span className="sleep-wave wave-3" />
     </div>
   );
 }
@@ -202,7 +264,7 @@ function HeroNetwork() {
 export default function App() {
   const [page, setPage] = useState("home");
   const [rows, setRows] = useState(parseDNA(demoFile));
-  const [status, setStatus] = useState("Demo data loaded");
+  const [status, setStatus] = useState("Demo data loaded successfully.");
   const [fileName, setFileName] = useState("demo-dna-file.txt");
 
   const report = useMemo(() => buildReport(rows), [rows]);
@@ -212,12 +274,18 @@ export default function App() {
     if (!file) return;
 
     const reader = new FileReader();
+
     reader.onload = () => {
-      const parsed = parseDNA(reader.result);
+      const parsed = parseDNA(reader.result || "");
       setRows(parsed);
       setFileName(file.name);
-      setStatus(`Loaded ${parsed.length} genetic markers from ${file.name}`);
+      setStatus(`Loaded ${parsed.length} genetic markers from ${file.name}.`);
     };
+
+    reader.onerror = () => {
+      setStatus("There was a problem reading the file.");
+    };
+
     reader.readAsText(file);
   }
 
@@ -232,303 +300,406 @@ export default function App() {
     {
       title: "Sleep",
       text: "Explore simplified circadian and recovery-related context from consumer genotype data.",
+      customVisual: <SleepVisual />,
     },
     {
       title: "Fitness",
       text: "See educational interpretations tied to exercise response, training style, and recovery tendencies.",
+      image:
+        "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80",
     },
     {
       title: "Nutrition",
       text: "Surface context around lactose digestion, caffeine metabolism, and broader metabolic traits.",
+      image:
+        "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1200&q=80",
     },
     {
-      title: "Skin & Immune Sensitivity",
-      text: "Frame how genomic variation may relate to skin barrier context and general immune sensitivity patterns.",
+      title: "Skin / Sensitivity",
+      text: "Frame how genomic variation may relate to skin barrier context and general sensitivity patterns.",
+      image:
+        "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1200&q=80",
     },
   ];
 
   return (
-    <div className="app-shell">
-      <div className="bg-glow glow-1" />
-      <div className="bg-glow glow-2" />
+    <div className="site-shell">
+      <div className="site-bg site-bg-one" />
+      <div className="site-bg site-bg-two" />
 
       <header className="topbar">
-        <div className="brand">
+        <div className="container topbar-inner">
           <GeneWiseLogo />
-          <div>
-            <h1>GeneWise</h1>
-            <p>Consumer genetics wellness platform</p>
-          </div>
-        </div>
 
-        <nav className="nav">
-          {pages.map(([key, label]) => (
-            <button
-              key={key}
-              className={page === key ? "nav-btn active" : "nav-btn"}
-              onClick={() => setPage(key)}
-            >
-              {label}
-            </button>
-          ))}
-        </nav>
+          <nav className="nav-tabs" aria-label="Main navigation">
+            {pages.map(([key, label]) => (
+              <button
+                key={key}
+                className={`nav-tab ${page === key ? "active" : ""}`}
+                onClick={() => setPage(key)}
+              >
+                {label}
+              </button>
+            ))}
+          </nav>
+        </div>
       </header>
 
-      {page === "home" && (
-        <main className="page">
-          <section className="hero-banner">
-            <HeroNetwork />
+      <main className="main-content">
+        {page === "home" && (
+          <>
+            <section className="hero-section hero-section-wide">
+              <div className="hero-shell hero-shell-wide">
+                <HeroBackground />
 
-            <div className="hero-banner-content">
-              <div className="eyebrow hero-eyebrow">
-                Genetics-informed wellness exploration
-              </div>
-              <h2>
-                Consumer DNA data,
-                <br />
-                translated into structured
-                <br />
-                wellness insight
-              </h2>
-              <p className="hero-banner-copy">
-                GeneWise is a concept platform that transforms consumer
-                genotype data into educational insight categories across
-                sleep, fitness, nutrition, skin, and immune sensitivity.
-              </p>
-              <p className="hero-banner-copy">
-                The goal is to make personal genomic information easier to
-                explore through clean, non-diagnostic reporting designed for
-                awareness and self-education.
-              </p>
+                <div className="hero-inner">
+                  <div className="hero-top-row">
+                    <div className="hero-copy">
+                      <span className="eyebrow">Genetics-informed wellness exploration</span>
 
-              <div className="hero-actions">
-                <button className="primary-btn" onClick={() => setPage("upload")}>
-                  Start with DNA Upload
-                </button>
-                <button className="ghost-btn hero-ghost" onClick={() => setPage("report")}>
-                  Explore Sample Report
-                </button>
-              </div>
-            </div>
+                      <h1>
+                        Turn raw consumer
+                        <br />
+                        DNA data into a
+                        <br />
+                        clearer wellness
+                        <br />
+                        signal layer
+                      </h1>
 
-            <div className="hero-stats">
-              <div className="hero-stat">
-                <div className="hero-stat-value">6</div>
-                <div className="hero-stat-label">report sections</div>
-              </div>
-              <div className="hero-stat">
-                <div className="hero-stat-value">Local</div>
-                <div className="hero-stat-label">DNA parsing workflow</div>
-              </div>
-              <div className="hero-stat">
-                <div className="hero-stat-value">Clear</div>
-                <div className="hero-stat-label">scientific framing</div>
-              </div>
-              <div className="hero-stat">
-                <div className="hero-stat-value">Modern</div>
-                <div className="hero-stat-label">consumer-style interface</div>
-              </div>
-            </div>
-          </section>
+                      <p className="hero-text">
+                        GeneWise is a biotech-style product concept that transforms
+                        raw genotype data into structured, educational wellness
+                        reporting across sleep, fitness, nutrition, skin,
+                        caffeine response, and lactose digestion.
+                      </p>
 
-          <section className="section-block">
-            <div className="section-heading">
-              <div className="eyebrow">How it works</div>
-              <h3>A simple workflow for turning DNA data into wellness context</h3>
-            </div>
+                      <p className="hero-subtext">
+                        The experience is designed around scientific restraint,
+                        strong interface clarity, and local browser parsing in this
+                        prototype rather than exaggerated health claims.
+                      </p>
 
-            <div className="steps-grid">
-              <div className="step-card">
-                <div className="step-number">01</div>
-                <h4>Upload consumer DNA data</h4>
-                <p>
-                  Import a 23andMe-style raw genotype file to simulate a consumer
-                  genetics workflow.
-                </p>
-              </div>
-              <div className="step-card">
-                <div className="step-number">02</div>
-                <h4>Map markers to insight categories</h4>
-                <p>
-                  Parse structured genotype markers and connect them to curated,
-                  educational wellness-oriented categories.
-                </p>
-              </div>
-              <div className="step-card">
-                <div className="step-number">03</div>
-                <h4>View a structured report</h4>
-                <p>
-                  Generate simplified summaries with interpretation context and
-                  suggested next-step framing.
-                </p>
-              </div>
-            </div>
-          </section>
+                      <div className="hero-actions">
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => setPage("upload")}
+                        >
+                          Start with DNA Upload
+                        </button>
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => setPage("report")}
+                        >
+                          Explore Sample Report
+                        </button>
+                      </div>
+                    </div>
 
-          <section className="section-block">
-            <div className="section-heading">
-              <div className="eyebrow">Platform categories</div>
-              <h3>What GeneWise is designed to help users explore</h3>
-            </div>
+                    <div className="hero-visual-zone">
+                      <HeroSignalPanel />
+                    </div>
+                  </div>
 
-            <div className="insight-grid">
-              {homeCategories.map((item) => (
-                <div key={item.title} className="info-card">
-                  <h4>{item.title}</h4>
-                  <p>{item.text}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className="section-block cta-block">
-            <div>
-              <div className="eyebrow">Explore the demo</div>
-              <h3>See how the reporting flow comes together</h3>
-              <p className="section-sub">
-                Review the sample report or test the upload flow to see how a
-                consumer-facing genetics wellness experience could work.
-              </p>
-            </div>
-
-            <div className="hero-actions">
-              <button className="primary-btn" onClick={() => setPage("report")}>
-                View Demo Report
-              </button>
-              <button className="ghost-btn" onClick={() => setPage("upload")}>
-                Try Upload Flow
-              </button>
-            </div>
-          </section>
-        </main>
-      )}
-
-      {page === "upload" && (
-        <main className="page">
-          <section className="section-block">
-            <div className="section-heading">
-              <div className="eyebrow">DNA intake</div>
-              <h3>Upload consumer DNA data</h3>
-              <p className="section-sub">
-                Simulate the first step of a user-facing genetics workflow with a
-                raw genotype file.
-              </p>
-            </div>
-
-            <div className="upload-layout">
-              <div className="upload-dropzone">
-                <div className="upload-icon">↑</div>
-                <h4>Drop a raw DNA file here</h4>
-                <p>
-                  Upload a 23andMe-style file to populate the reporting workflow.
-                </p>
-                <label className="upload-label">
-                  Choose File
-                  <input className="hidden-input" type="file" onChange={upload} />
-                </label>
-
-                <div className="status-box">
-                  <strong>Current file:</strong> {fileName}
-                  <br />
-                  {status}
+                  <div className="hero-bottom-row">
+                    <div className="hero-metric">
+                      <strong>6</strong>
+                      <span>report categories</span>
+                    </div>
+                    <div className="hero-metric">
+                      <strong>Local</strong>
+                      <span>browser-based DNA parsing</span>
+                    </div>
+                    <div className="hero-metric">
+                      <strong>Clear</strong>
+                      <span>non-diagnostic reporting</span>
+                    </div>
+                    <div className="hero-metric">
+                      <strong>Modern</strong>
+                      <span>consumer biotech UX</span>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </section>
 
-              <div className="info-card">
-                <h4>What happens after upload</h4>
-                <ul className="clean-list">
-                  <li>Structured genotype markers are parsed locally</li>
-                  <li>Markers are matched to simplified wellness categories</li>
-                  <li>A user-facing insight report is generated</li>
-                  <li>Outputs are framed as educational, not diagnostic</li>
+            <section className="section">
+              <div className="container">
+                <form
+                  className="waitlist-card waitlist-card-premium"
+                  action="https://formspree.io/f/YOUR_FORMSPREE_ID"
+                  method="POST"
+                >
+                  <div className="waitlist-copy">
+                    <span className="waitlist-kicker">Early access</span>
+                    <h3>Join the GeneWise waitlist</h3>
+                    <p>
+                      Follow the concept as it evolves. No fake traction, no
+                      inflated user counts, just direct interest collection.
+                    </p>
+                  </div>
+
+                  <div className="waitlist-fields">
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Enter your email"
+                      required
+                    />
+                    <button type="submit" className="btn btn-primary">
+                      Join Waitlist
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
+
+            <section className="section">
+              <div className="container">
+                <div className="section-heading">
+                  <span className="eyebrow">Product framing</span>
+                  <h2>A more credible way to translate consumer genotype data into usable wellness context</h2>
+                </div>
+
+                <div className="feature-band">
+                  <div className="feature-band-card">
+                    <span className="feature-kicker">Structured intake</span>
+                    <h3>Upload raw consumer DNA data</h3>
+                    <p>
+                      Simulate a real product entry point with a clean intake
+                      flow instead of dropping users into a generic report.
+                    </p>
+                  </div>
+                  <div className="feature-band-card">
+                    <span className="feature-kicker">Signal mapping</span>
+                    <h3>Convert markers into meaningful categories</h3>
+                    <p>
+                      Organize genotype data into a framework users can
+                      understand, rather than showing isolated SNPs with no
+                      context.
+                    </p>
+                  </div>
+                  <div className="feature-band-card">
+                    <span className="feature-kicker">Scientific restraint</span>
+                    <h3>Frame outputs without fake clinical claims</h3>
+                    <p>
+                      Keep the experience polished and credible by staying
+                      educational, non-diagnostic, and privacy-conscious.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section className="section">
+              <div className="container">
+                <div className="section-heading">
+                  <span className="eyebrow">Platform categories</span>
+                  <h2>What GeneWise is designed to help users explore</h2>
+                </div>
+
+                <div className="category-grid">
+                  {homeCategories.map((item) => (
+                    <article className="category-card" key={item.title}>
+                      {item.customVisual ? (
+                        <div className="category-custom-visual">
+                          {item.customVisual}
+                        </div>
+                      ) : (
+                        <div
+                          className="category-image"
+                          style={{ backgroundImage: `url(${item.image})` }}
+                        />
+                      )}
+                      <div className="category-overlay" />
+                      <div className="category-content">
+                        <h3>{item.title}</h3>
+                        <p>{item.text}</p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section className="section">
+              <div className="container">
+                <div className="split-cta">
+                  <div className="split-cta-main">
+                    <span className="eyebrow">See the prototype flow</span>
+                    <h2>Start with the upload experience or jump directly into the report</h2>
+                    <p>
+                      Explore the front-end flow from intake to structured
+                      interpretation and see how the concept comes together as a
+                      polished wellness platform.
+                    </p>
+                  </div>
+
+                  <div className="split-cta-actions">
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => setPage("upload")}
+                    >
+                      Try Upload Flow
+                    </button>
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => setPage("report")}
+                    >
+                      View Demo Report
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </>
+        )}
+
+        {page === "upload" && (
+          <section className="section upload-section">
+            <div className="container">
+              <div className="section-heading upload-heading">
+                <span className="eyebrow">DNA intake</span>
+                <h2>Upload consumer DNA data</h2>
+                <p>
+                  Simulate the first step of a user-facing genetics workflow
+                  with a raw genotype file. This page is intentionally clean,
+                  balanced, and image-free.
+                </p>
+              </div>
+
+              <div className="upload-layout">
+                <div className="upload-card">
+                  <div className="upload-icon" aria-hidden="true">
+                    ↑
+                  </div>
+
+                  <h3>Drop a raw DNA file here</h3>
+                  <p className="upload-description">
+                    Upload a 23andMe-style text file to populate the reporting
+                    workflow and preview how structured wellness insights could
+                    be generated.
+                  </p>
+
+                  <label className="file-input-wrap">
+                    <input
+                      type="file"
+                      accept=".txt,.csv"
+                      onChange={upload}
+                    />
+                    <span className="btn btn-primary">Choose File</span>
+                  </label>
+
+                  <div className="upload-meta">
+                    <div className="meta-row">
+                      <span className="meta-label">Current file</span>
+                      <strong>{fileName}</strong>
+                    </div>
+                    <div className="status-box">{status}</div>
+                  </div>
+                </div>
+
+                <aside className="info-card">
+                  <span className="eyebrow">What happens after upload</span>
+                  <h3>Structured parsing, then simplified reporting</h3>
+
+                  <ul className="info-list">
+                    <li>Structured genotype markers are parsed locally in the browser.</li>
+                    <li>Markers are mapped to simplified wellness categories.</li>
+                    <li>A user-facing report is generated from the detected markers.</li>
+                    <li>Outputs stay educational and non-diagnostic.</li>
+                  </ul>
+
+                  <div className="info-note">
+                    GeneWise is a concept experience for wellness education and
+                    product design exploration, not a medical testing platform.
+                  </div>
+                </aside>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {page === "report" && (
+          <section className="section">
+            <div className="container">
+              <div className="section-heading">
+                <span className="eyebrow">Sample results</span>
+                <h2>Illustrative wellness insight report</h2>
+                <p>
+                  Example reporting generated from the genotype markers
+                  currently loaded into the prototype.
+                </p>
+              </div>
+
+              <div className="report-grid">
+                {report.map((card) => (
+                  <article className="report-card" key={card.title}>
+                    <div className="report-card-top">
+                      <h3>{card.title}</h3>
+                      <span className="genotype-pill">{card.genotype}</span>
+                    </div>
+
+                    <div className="report-block">
+                      <span className="report-label">Interpretation</span>
+                      <p>{card.interpretation}</p>
+                    </div>
+
+                    <div className="report-block">
+                      <span className="report-label">What this may mean</span>
+                      <p>{card.meaning}</p>
+                    </div>
+
+                    <div className="report-block">
+                      <span className="report-label">Suggested next step</span>
+                      <p>{card.nextStep}</p>
+                    </div>
+
+                    <div className="report-tags">
+                      <span>Consumer DNA context</span>
+                      <span>Educational only</span>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {page === "privacy" && (
+          <section className="section">
+            <div className="container narrow">
+              <div className="section-heading">
+                <span className="eyebrow">Trust and scientific framing</span>
+                <h2>Built to be informative, not diagnostic</h2>
+              </div>
+
+              <div className="privacy-card">
+                <h3>Core principles</h3>
+                <ul className="info-list">
+                  <li>Educational wellness interpretation only.</li>
+                  <li>No disease or allergy diagnosis.</li>
+                  <li>No clinical claims or medical decision guidance.</li>
+                  <li>Privacy-conscious product framing with local parsing in this prototype.</li>
                 </ul>
-              </div>
-            </div>
-          </section>
-        </main>
-      )}
 
-      {page === "report" && (
-        <main className="page">
-          <section className="section-block">
-            <div className="section-heading">
-              <div className="eyebrow">Sample results</div>
-              <h3>Illustrative wellness insight report</h3>
-              <p className="section-sub">
-                Example reporting generated from the currently loaded genotype markers.
-              </p>
-            </div>
-
-            <div className="report-grid">
-              {report.map((card) => (
-                <div key={card.title} className="report-card">
-                  <div className="report-head">
-                    <h4>{card.title}</h4>
-                    <span className="pill">{card.genotype}</span>
-                  </div>
-
-                  <div className="report-section">
-                    <div className="report-label">Interpretation</div>
-                    <p>{card.interpretation}</p>
-                  </div>
-
-                  <div className="report-section">
-                    <div className="report-label">What this may mean</div>
-                    <p>{card.meaning}</p>
-                  </div>
-
-                  <div className="report-section">
-                    <div className="report-label">Suggested next step</div>
-                    <p>{card.nextStep}</p>
-                  </div>
-
-                  <div className="report-chip-row">
-                    <span className="report-chip">Consumer DNA context</span>
-                    <span className="report-chip">Educational only</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        </main>
-      )}
-
-      {page === "privacy" && (
-        <main className="page">
-          <section className="section-block">
-            <div className="section-heading">
-              <div className="eyebrow">Trust and scientific framing</div>
-              <h3>Built to be informative, not diagnostic</h3>
-            </div>
-
-            <div className="privacy-grid">
-              <div className="info-card">
-                <h4>Core principles</h4>
-                <ul className="clean-list">
-                  <li>Educational wellness interpretation only</li>
-                  <li>No disease or allergy diagnosis</li>
-                  <li>No clinical claims or medical decision guidance</li>
-                  <li>Privacy-conscious product framing</li>
-                </ul>
-              </div>
-
-              <div className="info-card">
-                <h4>Why this matters</h4>
+                <h3>Why this matters</h3>
                 <p>
-                  Consumer genotype data can be useful for structured self-exploration,
-                  but meaningful diagnosis depends on validated clinical workflows,
-                  context, and professional evaluation.
+                  Consumer genotype data can be useful for structured
+                  self-exploration, but meaningful diagnosis depends on
+                  validated clinical workflows, additional context, and
+                  professional evaluation.
                 </p>
                 <p>
-                  Most health-related traits reflect both genetics and environmental
-                  factors, so outputs should be understood as simplified context rather
-                  than certainty.
+                  Most health-related traits reflect both genetics and
+                  environmental factors, so outputs should be understood as
+                  simplified context rather than certainty.
                 </p>
               </div>
             </div>
           </section>
-        </main>
-      )}
+        )}
+      </main>
     </div>
   );
 }
