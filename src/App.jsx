@@ -427,7 +427,7 @@ export default function App() {
               <div className="container">
                 <form
                   className="waitlist-card waitlist-card-premium"
-                  action="https://formspree.io/f/YOUR_FORMSPREE_ID"
+                  action="https://formspree.io/f/xgopbjlb"
                   method="POST"
                 >
                   <div className="waitlist-copy">
