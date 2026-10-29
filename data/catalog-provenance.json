@@ -1,0 +1,148 @@
+{
+  "retrievedAt": "2026-10-29T23:27:20.490006+00:00",
+  "source": "NHGRI-EBI GWAS Catalog API v2",
+  "sourceUrl": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+  "selection": "Union of previous bounded snapshot and up to the first 200 associations per exact trait query, p <= 5e-8, single-rsID non-interaction associations with publication IDs; deduplicated by rsID. Bounded, non-comprehensive snapshot; no individual predictions.",
+  "queries": [
+    {
+      "query": "Previous bounded snapshot",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null
+    },
+    {
+      "query": "body height",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "chronotype measurement",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "sleep duration trait",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "Sleep efficiency",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations?efo_trait=Sleep+efficiency&size=200&show_child_trait=false",
+      "totalAvailable": 6
+    },
+    {
+      "query": "Wake After Sleep Onset",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations?efo_trait=Wake+After+Sleep+Onset&size=200&show_child_trait=false",
+      "totalAvailable": 5
+    },
+    {
+      "query": "sleep latency",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "coffee consumption",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "caffeine measurement",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "caffeine metabolite measurement",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "eye color",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "hair color",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "hair morphology",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations?efo_trait=hair+morphology&size=200&show_child_trait=false",
+      "totalAvailable": 24
+    },
+    {
+      "query": "25-hydroxyvitamin D3 measurement",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "25-hydroxyvitamin D2 measurement",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations?efo_trait=25-hydroxyvitamin+D2+measurement&size=200&show_child_trait=false",
+      "totalAvailable": 0
+    },
+    {
+      "query": "lactose tolerance test",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations?efo_trait=lactose+tolerance+test&size=200&show_child_trait=false",
+      "totalAvailable": 2
+    },
+    {
+      "query": "polyunsaturated fatty acid measurement",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "omega-3 polyunsaturated fatty acid measurement",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "omega-6 polyunsaturated fatty acid measurement",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "saturated fatty acids measurement",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "sensory perception of bitter taste",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "sensory perception of sweet taste",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "physical activity",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    },
+    {
+      "query": "grip strength measurement",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
+      "totalAvailable": null,
+      "warning": "No cached response; not fetched in offline mode"
+    }
+  ],
+  "markerCount": 446,
+  "associationCount": 514
+}

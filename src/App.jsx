@@ -1,129 +1,6 @@
 import { useMemo, useState } from "react";
 
-const demoFile = `rs762551 7 24966446 AC
-rs4988235 2 136608646 CT
-rs1801260 4 56307853 TT
-rs1815739 11 66560624 CT
-rs12913832 15 28365618 AG
-rs174537 11 61571478 GG`;
-
-function parseDNA(text) {
-  return text
-    .split("\n")
-    .map((line) => {
-      const parts = line.trim().split(/\s+/);
-      return parts.length >= 4 ? { rsid: parts[0], genotype: parts[3] } : null;
-    })
-    .filter(Boolean);
-}
-
-function getGenotype(rows, rsid) {
-  return rows.find((r) => r.rsid === rsid)?.genotype || "N/A";
-}
-
-function buildReport(rows) {
-  const caffeine = getGenotype(rows, "rs762551");
-  const lactose = getGenotype(rows, "rs4988235");
-  const sleep = getGenotype(rows, "rs1801260");
-  const muscle = getGenotype(rows, "rs1815739");
-  const skin = getGenotype(rows, "rs12913832");
-  const nutrition = getGenotype(rows, "rs174537");
-
-  return [
-    {
-      title: "Caffeine Response",
-      genotype: caffeine,
-      interpretation: "Educational context for caffeine metabolism tendency.",
-      meaning:
-        caffeine === "AA"
-          ? "This pattern may align with faster caffeine metabolism in simplified consumer genetics models."
-          : caffeine === "AC" || caffeine === "CA"
-          ? "This pattern may align with a more moderate caffeine response."
-          : caffeine === "CC"
-          ? "This pattern may align with slower caffeine metabolism in simplified models."
-          : "No matching marker was found in the current file.",
-      nextStep:
-        "Use as general context for caffeine timing, not as a medical recommendation.",
-    },
-    {
-      title: "Lactose Digestion",
-      genotype: lactose,
-      interpretation: "Educational context for lactase persistence tendency.",
-      meaning:
-        lactose === "TT"
-          ? "This pattern may be associated with stronger adult lactase persistence tendency."
-          : lactose === "CT" || lactose === "TC"
-          ? "This pattern may suggest an intermediate tendency for lactose digestion."
-          : lactose === "CC"
-          ? "This pattern may suggest lower support for lactase persistence."
-          : "No matching marker was found in the current file.",
-      nextStep:
-        "Pair this with real-world digestion experience rather than treating it as a diagnosis.",
-    },
-    {
-      title: "Sleep Rhythm",
-      genotype: sleep,
-      interpretation: "Educational context for circadian timing tendency.",
-      meaning:
-        sleep === "TT"
-          ? "This pattern may align with a later sleep timing tendency."
-          : sleep === "CC"
-          ? "This pattern may align with steadier sleep timing in simplified models."
-          : sleep === "CT" || sleep === "TC"
-          ? "This pattern may reflect a more mixed circadian profile."
-          : "No matching marker was found in the current file.",
-      nextStep:
-        "Use this as background context when thinking about sleep schedules and recovery habits.",
-    },
-    {
-      title: "Power / Endurance",
-      genotype: muscle,
-      interpretation: "Educational context for exercise response tendency.",
-      meaning:
-        muscle === "CC"
-          ? "This pattern may be framed as a stronger fast-twitch tendency in simplified models."
-          : muscle === "TT"
-          ? "This pattern may be framed as a stronger endurance-oriented tendency."
-          : muscle === "CT" || muscle === "TC"
-          ? "This pattern may suggest a mixed training response profile."
-          : "No matching marker was found in the current file.",
-      nextStep:
-        "Use this as a conversation starter for training style, not as a hard biological limit.",
-    },
-    {
-      title: "Skin / Sensitivity",
-      genotype: skin,
-      interpretation:
-        "Educational context for pigmentation, UV response, and visible skin-trait framing.",
-      meaning:
-        skin === "AA"
-          ? "This pattern may align with lighter pigmentation-related traits in simplified models."
-          : skin === "AG" || skin === "GA"
-          ? "This pattern may align with an intermediate pigmentation context in simplified models."
-          : skin === "GG"
-          ? "This pattern may align with darker pigmentation-related context in simplified models."
-          : "No matching marker was found in the current file.",
-      nextStep:
-        "Use this as light educational context around UV exposure habits and skin-awareness routines, not as a cosmetic or medical conclusion.",
-    },
-    {
-      title: "Nutrition Lipid Context",
-      genotype: nutrition,
-      interpretation:
-        "Educational context for fatty-acid metabolism and broader nutrition-response framing.",
-      meaning:
-        nutrition === "GG"
-          ? "This pattern may align with a stronger omega-fatty-acid processing context in simplified nutrition models."
-          : nutrition === "GT" || nutrition === "TG"
-          ? "This pattern may suggest a more mixed lipid-metabolism context."
-          : nutrition === "TT"
-          ? "This pattern may suggest a less efficient conversion pattern in simplified educational models."
-          : "No matching marker was found in the current file.",
-      nextStep:
-        "Use this as a prompt to think about dietary patterns and nutrition questions, not as a prescription or deficiency diagnosis.",
-    },
-  ];
-}
+import { parseDNA, buildReport, demoFile, MAX_FILE_BYTES, markers, filterReport, catalogMetadata } from "./lib/dna.js";
 
 function GeneWiseLogo() {
   return (
@@ -135,7 +12,7 @@ function GeneWiseLogo() {
       </div>
       <div className="brand-copy">
         <span className="brand-name">GeneWise</span>
-        <span className="brand-tag">Consumer genetics wellness platform</span>
+        <span className="brand-tag">Genetics education prototype</span>
       </div>
     </div>
   );
@@ -192,7 +69,7 @@ function HeroBackground() {
       <div className="floating-panel fp-3 meaningful-panel">
         <span>Output layer</span>
         <strong>Structured wellness report</strong>
-        <small>Sleep · Fitness · Nutrition · Skin</small>
+        <small>Expanded research catalog</small>
       </div>
     </div>
   );
@@ -231,15 +108,15 @@ function HeroSignalPanel() {
         </div>
         <div className="signal-node-card node-card-b">
           <span>Fitness</span>
-          <strong>Recovery profile</strong>
+          <strong>Muscle research</strong>
         </div>
         <div className="signal-node-card node-card-c">
           <span>Nutrition</span>
-          <strong>Metabolic signals</strong>
+          <strong>Research context</strong>
         </div>
         <div className="signal-node-card node-card-d">
-          <span>Skin</span>
-          <strong>Sensitivity framing</strong>
+          <span>Pigmentation</span>
+          <strong>Eye-color research</strong>
         </div>
       </div>
     </div>
@@ -262,13 +139,25 @@ function SleepVisual() {
 
 export default function App() {
   const [page, setPage] = useState("home");
-  const [rows, setRows] = useState(parseDNA(demoFile));
-  const [status, setStatus] = useState("Demo data loaded successfully.");
-  const [fileName, setFileName] = useState("demo-dna-file.txt");
+  const [dataset, setDataset] = useState(null);
+  const [isDemo, setIsDemo] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const rows = dataset?.rows ?? [];
+  const [status, setStatus] = useState("Choose a file or try the synthetic example.");
+  const [fileName, setFileName] = useState("No file loaded");
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
   const report = useMemo(() => buildReport(rows), [rows]);
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("All");
+  const [resultStatus, setResultStatus] = useState("All");
+  const [resultPage, setResultPage] = useState(0);
+  const filteredReport = useMemo(() => filterReport(report, {query, category, status: resultStatus}), [report, query, category, resultStatus]);
+  const pageCount = Math.max(1, Math.ceil(filteredReport.length / 12));
+  const activePage = Math.min(resultPage, pageCount - 1);
+  const visibleReport = filteredReport.slice(activePage * 12, (activePage + 1) * 12);
+  const categories = [...new Set(markers.flatMap(m => m.categories))].sort();
 
   async function handleWaitlistSubmit(e) {
     e.preventDefault();
@@ -296,24 +185,42 @@ export default function App() {
     }
   }
 
-  function upload(e) {
+  function resetData() {
+    setDataset(null); setIsDemo(false); setFileName("No file loaded"); setResultPage(0);
+    setStatus("Data cleared from this session.");
+  }
+
+  function loadDemo() {
+    setDataset(parseDNA(demoFile)); setIsDemo(true); setResultPage(0);
+    setFileName("Synthetic example"); setStatus("Synthetic example loaded. This is not personal DNA.");
+    setPage("report");
+  }
+
+  async function upload(e) {
     const file = e.target.files?.[0];
+    e.target.value = "";
     if (!file) return;
+    setDataset(null); setIsDemo(false); setFileName("No file loaded"); setResultPage(0);
+    if (file.size > MAX_FILE_BYTES) { setStatus("File too large. Choose an uncompressed text file under 20 MB."); return; }
+    setLoading(true);
+    try {
+      const parsed = parseDNA(await file.text());
+      if (!parsed.rows.length) { setStatus("No supported SNP records found. Use a raw text export with rsID, chromosome, position and genotype columns."); return; }
+      setDataset(parsed); setFileName(file.name);
+      setStatus(`Loaded ${parsed.stats.uniqueMarkers.toLocaleString()} unique markers. Review file quality below.`);
+    } catch {
+      setStatus("Unable to read this file. Try an uncompressed TXT, TSV or CSV export.");
+    } finally { setLoading(false); }
+  }
 
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const parsed = parseDNA(reader.result || "");
-      setRows(parsed);
-      setFileName(file.name);
-      setStatus(`Loaded ${parsed.length} genetic markers from ${file.name}.`);
-    };
-
-    reader.onerror = () => {
-      setStatus("There was a problem reading the file.");
-    };
-
-    reader.readAsText(file);
+  function exportReport() {
+    const payload = { project: "GeneWise", version: 2, catalog: catalogMetadata, source: isDemo ? "synthetic example" : "user file",
+      limitations: "Educational marker observations only; genome build and strand not verified; no phenotype predictions.",
+      quality: dataset.stats,
+      markers: report.map(({rsid, gene, genotype, status, category, source, paper}) => ({rsid, gene, genotype, status, category, source, paper})) };
+    const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], {type: "application/json"}));
+    const link = document.createElement("a"); link.href = url; link.download = "genewise-marker-report.json";
+    link.click(); URL.revokeObjectURL(url);
   }
 
   const pages = [
@@ -326,12 +233,12 @@ export default function App() {
   const homeCategories = [
     {
       title: "Sleep",
-      text: "Explore simplified circadian and recovery-related context from consumer genotype data.",
+      text: "Learn about circadian research and why a single marker cannot establish sleep needs.",
       customVisual: <SleepVisual />,
     },
     {
       title: "Fitness",
-      text: "See educational interpretations tied to exercise response, training style, and recovery tendencies.",
+      text: "Explore muscle-biology research without assigning training plans or athletic potential.",
       image:
         "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80",
     },
@@ -342,8 +249,8 @@ export default function App() {
         "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1200&q=80",
     },
     {
-      title: "Skin / Sensitivity",
-      text: "Frame how genomic variation may relate to skin barrier context and general sensitivity patterns.",
+      title: "Eye pigmentation",
+      text: "Explore an eye pigmentation research marker and the limits of single-marker associations.",
       image:
         "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1200&q=80",
     },
@@ -382,30 +289,11 @@ export default function App() {
                 <div className="hero-inner">
                   <div className="hero-top-row">
                     <div className="hero-copy">
-                      <span className="eyebrow">Genetics-informed wellness exploration</span>
+                      <span className="eyebrow">Explore your genotype file</span>
 
-                      <h1>
-                        Turn raw consumer
-                        <br />
-                        DNA data into a
-                        <br />
-                        clearer wellness
-                        <br />
-                        signal layer
-                      </h1>
-
-                      <p className="hero-text">
-                        GeneWise is a biotech-style product concept that transforms
-                        raw genotype data into structured, educational wellness
-                        reporting across sleep, fitness, nutrition, skin,
-                        caffeine response, and lactose digestion.
-                      </p>
-
-                      <p className="hero-subtext">
-                        The experience is designed around scientific restraint,
-                        strong interface clarity, and local browser parsing in this
-                        prototype rather than exaggerated health claims.
-                      </p>
+                      <h1>Understand the markers.<br />Understand the limits.</h1>
+                      <p className="hero-text">Explore {markers.length.toLocaleString()} research markers in a raw DNA file, check data quality, and learn what the research does and does not establish.</p>
+                      <p className="hero-subtext">Your DNA file is processed in this browser session. Start with a synthetic example to explore without uploading personal data.</p>
 
                       <div className="hero-actions">
                         <button
@@ -416,7 +304,7 @@ export default function App() {
                         </button>
                         <button
                           className="btn btn-secondary"
-                          onClick={() => setPage("report")}
+                          onClick={loadDemo}
                         >
                           Explore Sample Report
                         </button>
@@ -430,8 +318,8 @@ export default function App() {
 
                   <div className="hero-bottom-row">
                     <div className="hero-metric">
-                      <strong>6</strong>
-                      <span>report categories</span>
+                      <strong>{markers.length.toLocaleString()}</strong>
+                      <span>research markers</span>
                     </div>
                     <div className="hero-metric">
                       <strong>Local</strong>
@@ -460,8 +348,7 @@ export default function App() {
                     <span className="waitlist-kicker">Early access</span>
                     <h3>Join the GeneWise waitlist</h3>
                     <p>
-                      Follow the concept as it evolves. No fake traction, no
-                      inflated user counts, just direct interest collection.
+                      Follow the concept as it evolves. Get updates as the educational prototype develops.
                     </p>
                   </div>
 
@@ -493,8 +380,8 @@ export default function App() {
             <section className="section">
               <div className="container">
                 <div className="section-heading">
-                  <span className="eyebrow">Product framing</span>
-                  <h2>A more credible way to translate consumer genotype data into usable wellness context</h2>
+                  <span className="eyebrow">How it works</span>
+                  <h2>From a raw file to traceable marker observations</h2>
                 </div>
 
                 <div className="feature-band">
@@ -502,8 +389,7 @@ export default function App() {
                     <span className="feature-kicker">Structured intake</span>
                     <h3>Upload raw consumer DNA data</h3>
                     <p>
-                      Simulate a real product entry point with a clean intake
-                      flow instead of dropping users into a generic report.
+                      Check supported SNP records and see which rows were skipped, duplicated, or uncalled.
                     </p>
                   </div>
                   <div className="feature-band-card">
@@ -516,11 +402,10 @@ export default function App() {
                     </p>
                   </div>
                   <div className="feature-band-card">
-                    <span className="feature-kicker">Scientific restraint</span>
-                    <h3>Frame outputs without fake clinical claims</h3>
+                    <span className="feature-kicker">Research context</span>
+                    <h3>Learn the limits of each observation</h3>
                     <p>
-                      Keep the experience polished and credible by staying
-                      educational, non-diagnostic, and privacy-conscious.
+                      Separate what your file contains from what research can establish. Open the original marker records to learn more.
                     </p>
                   </div>
                 </div>
@@ -565,9 +450,7 @@ export default function App() {
                     <span className="eyebrow">See the prototype flow</span>
                     <h2>Start with the upload experience or jump directly into the report</h2>
                     <p>
-                      Explore the front-end flow from intake to structured
-                      interpretation and see how the concept comes together as a
-                      polished wellness platform.
+                      Try a synthetic example, inspect the expanded marker catalog, and download a concise record of the observations.
                     </p>
                   </div>
 
@@ -580,7 +463,7 @@ export default function App() {
                     </button>
                     <button
                       className="btn btn-secondary"
-                      onClick={() => setPage("report")}
+                      onClick={loadDemo}
                     >
                       View Demo Report
                     </button>
@@ -598,9 +481,7 @@ export default function App() {
                 <span className="eyebrow">DNA intake</span>
                 <h2>Upload consumer DNA data</h2>
                 <p>
-                  Simulate the first step of a user-facing genetics workflow
-                  with a raw genotype file. This page is intentionally clean,
-                  balanced, and image-free.
+                  Choose an uncompressed raw text export with rsID, chromosome, position, and genotype columns. Four-column and separate-allele five-column layouts are supported.
                 </p>
               </div>
 
@@ -610,15 +491,13 @@ export default function App() {
                     ↑
                   </div>
 
-                  <h3>Drop a raw DNA file here</h3>
+                  <h3>Choose a raw DNA text file</h3>
                   <p className="upload-description">
-                    Upload a 23andMe-style text file to populate the reporting
-                    workflow and preview how structured wellness insights could
-                    be generated.
+                    TXT, TSV or CSV, up to 20 MB. ZIP, VCF, indels and haploid genotypes are not supported. Allele order is normalized; strand and genome build are not inferred.
                   </p>
 
                   <label className="file-input-wrap">
-                    <input type="file" accept=".txt,.csv" onChange={upload} />
+                    <input type="file" accept=".txt,.csv,.tsv" disabled={loading} onChange={upload} />
                     <span className="btn btn-primary">Choose File</span>
                   </label>
 
@@ -627,7 +506,12 @@ export default function App() {
                       <span className="meta-label">Current file</span>
                       <strong>{fileName}</strong>
                     </div>
-                    <div className="status-box">{status}</div>
+                    <div className="status-box" role="status" aria-live="polite">{loading ? "Reading file…" : status}</div>
+                    <div className="hero-actions">
+                      <button className="btn btn-secondary" disabled={loading} onClick={loadDemo}>Try synthetic example</button>
+                      {dataset && <button className="btn btn-primary" disabled={loading} onClick={() => setPage("report")}>View report</button>}
+                      {dataset && <button className="btn btn-secondary" disabled={loading} onClick={resetData}>Clear data</button>}
+                    </div>
                   </div>
                 </div>
 
@@ -637,7 +521,7 @@ export default function App() {
 
                   <ul className="info-list">
                     <li>Structured genotype markers are parsed locally in the browser.</li>
-                    <li>Markers are mapped to simplified wellness categories.</li>
+                    <li>Catalog markers are matched by rsID and shown with research context.</li>
                     <li>A user-facing report is generated from the detected markers.</li>
                     <li>Outputs stay educational and non-diagnostic.</li>
                   </ul>
@@ -656,44 +540,80 @@ export default function App() {
           <section className="section">
             <div className="container">
               <div className="section-heading">
-                <span className="eyebrow">Sample results</span>
-                <h2>Illustrative wellness insight report</h2>
+                <span className="eyebrow">Marker observations</span>
+                <h2>Your educational marker report</h2>
                 <p>
-                  Example reporting generated from the genotype markers
-                  currently loaded into the prototype.
+                  Review the markers present in the loaded file. Single-marker observations do not establish personal traits.
                 </p>
               </div>
 
+              {!dataset ? <div className="info-card"><h3>No DNA data loaded</h3><p>Choose a file or use our clearly labeled synthetic example.</p><div className="hero-actions"><button className="btn btn-primary" onClick={() => setPage("upload")}>Choose file</button><button className="btn btn-secondary" onClick={loadDemo}>Try synthetic example</button></div></div> : <>
+              <div className="quality-panel">
+                <div><span className="eyebrow">{isDemo ? "SYNTHETIC EXAMPLE — NOT PERSONAL DNA" : "YOUR FILE"}</span><h3>{fileName}</h3></div>
+                <div className="quality-grid">
+                  <div><strong>{dataset.stats.uniqueMarkers.toLocaleString()}</strong><span>unique markers</span></div>
+                  <div><strong>{report.filter(r => r.status === "Detected").length} / {markers.length.toLocaleString()}</strong><span>tracked markers detected</span></div>
+                  <div><strong>{dataset.stats.malformed}</strong><span>rows skipped</span></div>
+                  <div><strong>{dataset.stats.duplicates}</strong><span>duplicate rows</span></div>
+                  <div><strong>{dataset.stats.conflicts}</strong><span>conflicting markers</span></div>
+                  <div><strong>{dataset.stats.noCalls}</strong><span>no-call rows</span></div>
+                </div>
+                <p>Only supported SNP rows are counted. Identical duplicates are combined; conflicting duplicates are excluded. Strand orientation and genome build are not verified. No personal phenotype predictions are generated.</p>
+                <div className="hero-actions"><button className="btn btn-secondary" onClick={exportReport}>Download marker report</button><button className="btn btn-secondary" onClick={resetData}>Clear data</button></div>
+              </div>
+              <div className="category-coverage" aria-label="Marker coverage by research category">
+                {categories.map(topic => {
+                  const total = report.filter(m => m.categories.includes(topic));
+                  const detected = total.filter(m => m.status === "Detected").length;
+                  return <button key={topic} className={`coverage-card ${category === topic ? "selected" : ""}`} onClick={() => {setCategory(topic); setResultPage(0);}}><strong>{topic}</strong><span>{detected} / {total.length} markers detected</span></button>;
+                })}
+              </div>
+              <div className="catalog-controls">
+                <p>Catalog: {markers.length.toLocaleString()} markers. GWAS snapshot retrieved {catalogMetadata.retrievedAt.slice(0,10)}. This is a selected research catalog, not all known genetic variants. Study populations and methods vary; an association does not establish causation.</p>
+                <div className="catalog-filters">
+                  <label>Search markers<input type="search" value={query} placeholder="rsID, gene or research topic" onChange={e => {setQuery(e.target.value); setResultPage(0);}} /></label>
+                  <label>Research category<select value={category} onChange={e => {setCategory(e.target.value); setResultPage(0);}}><option>All</option>{categories.map(c => <option key={c}>{c}</option>)}</select></label>
+                  <label>File status<select value={resultStatus} onChange={e => {setResultStatus(e.target.value); setResultPage(0);}}>{["All", "Detected", "Not found", "No call", "Conflicting rows"].map(c => <option key={c}>{c}</option>)}</select></label>
+                </div>
+                <p role="status" aria-live="polite">{filteredReport.length.toLocaleString()} matching markers · Page {activePage + 1} of {pageCount}</p>
+              </div>
+              {filteredReport.length === 0 && <div className="info-card">No markers match these filters. Try a different search or choose All.</div>}
               <div className="report-grid">
-                {report.map((card) => (
-                  <article className="report-card" key={card.title}>
+                {visibleReport.map((card) => (
+                  <article className="report-card" key={card.rsid}>
                     <div className="report-card-top">
                       <h3>{card.title}</h3>
                       <span className="genotype-pill">{card.genotype}</span>
                     </div>
 
                     <div className="report-block">
-                      <span className="report-label">Interpretation</span>
+                      <span className="report-label">{card.rsid} · {card.gene} · {card.status}</span>
                       <p>{card.interpretation}</p>
                     </div>
 
                     <div className="report-block">
-                      <span className="report-label">What this may mean</span>
+                      <span className="report-label">File observation</span>
                       <p>{card.meaning}</p>
                     </div>
 
                     <div className="report-block">
-                      <span className="report-label">Suggested next step</span>
+                      <span className="report-label">Interpretation limits</span>
                       <p>{card.nextStep}</p>
                     </div>
 
+                    {card.evidence?.length > 0 && <details className="marker-evidence"><summary>{card.evidence.length} catalog association{card.evidence.length === 1 ? "" : "s"}</summary><p>Association significance is not predictive accuracy. Read the study for participants, methods and limitations.</p><ul>{card.evidence.map(e => <li key={e.associationId}>{e.trait} · p = {e.pValue.toExponential()} · <a href={`https://www.ebi.ac.uk/gwas/studies/${e.study}`} target="_blank" rel="noreferrer">{e.study}</a> · <a href={`https://pubmed.ncbi.nlm.nih.gov/${e.pmid}/`} target="_blank" rel="noreferrer">Publication</a></li>)}</ul></details>}
                     <div className="report-tags">
-                      <span>Consumer DNA context</span>
+                      <a href={`https://www.ncbi.nlm.nih.gov/snp/${card.rsid}`} target="_blank" rel="noreferrer">dbSNP record</a>
+                      {card.paper && <a href={card.paper} target="_blank" rel="noreferrer">Research paper</a>}
+                      {card.source && <a href={card.source} target="_blank" rel="noreferrer">GWAS Catalog</a>}
+                      <span>{card.category}</span>
                       <span>Educational only</span>
                     </div>
                   </article>
                 ))}
               </div>
+              <div className="catalog-pagination"><button className="btn btn-secondary" disabled={activePage === 0} onClick={() => setResultPage(activePage - 1)}>Previous page</button><span>Page {activePage + 1} of {pageCount}</span><button className="btn btn-secondary" disabled={activePage + 1 >= pageCount} onClick={() => setResultPage(activePage + 1)}>Next page</button></div>
+              </>}
             </div>
           </section>
         )}
@@ -702,17 +622,19 @@ export default function App() {
           <section className="section">
             <div className="container narrow">
               <div className="section-heading">
-                <span className="eyebrow">Trust and scientific framing</span>
+                <span className="eyebrow">Your data and the evidence</span>
                 <h2>Built to be informative, not diagnostic</h2>
               </div>
 
               <div className="privacy-card">
                 <h3>Core principles</h3>
                 <ul className="info-list">
-                  <li>Educational wellness interpretation only.</li>
+                  <li>Educational marker observations only; no personal trait prediction.</li>
                   <li>No disease or allergy diagnosis.</li>
                   <li>No clinical claims or medical decision guidance.</li>
-                  <li>Privacy-conscious product framing with local parsing in this prototype.</li>
+                  <li>DNA file contents are processed in memory in this browser, not sent to a server or saved in browser storage. Clear data or reload the page to remove them.</li>
+                  <li>Downloaded reports contain genetic observations. Save them only where you intend to keep them.</li>
+                  <li>The optional email waitlist sends your email to Formspree. DNA contents are not included. Hosting and external images may generate standard network requests.</li>
                 </ul>
 
                 <h3>Why this matters</h3>
