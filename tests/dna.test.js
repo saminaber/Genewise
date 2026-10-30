@@ -61,3 +61,45 @@ test('targeted categories include traceable literature references', () => {
   assert.ok(entries.some(m => /^https:\/\/(pubmed|pmc)\.ncbi\.nlm\.nih\.gov\//.test(m.paper ?? '')));
  }
 });
+
+test('file header metadata is reported as declared, never inferred from provider', () => {
+ const r = parseDNA('# AncestryDNA raw data\n# build 37\n# forward strand\nrs762551 15 75041917 AC');
+ assert.equal(r.metadata.provider,'AncestryDNA header');
+ assert.equal(r.metadata.build,'GRCh37'); assert.equal(r.metadata.strand,'Forward (+)');
+ assert.equal(parseDNA('# 23andMe\nrs1 1 1 AA').metadata.build,'Unknown');
+});
+test('ambiguous header builds and reverse strand are visible, not harmonized', () => {
+ const r=parseDNA('# build 37; build 38\n# reverse strand\nrs1 1 1 AC');
+ assert.equal(r.metadata.build,'Conflicting header values');
+ assert.equal(r.metadata.strand,'Reverse (-)'); assert.equal(r.rows[0].genotype,'AC');
+ assert.ok(r.metadata.warnings.some(w=>w.includes('not complemented')));
+});
+test('quoted CSV preserves empty no-call columns and rejects broken quotes', () => {
+ assert.equal(parseDNA('"rs1","1","1",""').rows[0].genotype,null);
+ assert.equal(parseDNA('"rs1","1","1","AC"junk').stats.malformed,1);
+ assert.equal(parseDNA('"rs1","1","1","AC').stats.malformed,1);
+});
+test('VCF, archives and unsafe integer coordinates are rejected explicitly', () => {
+ assert.throws(()=>parseDNA('##fileformat=VCFv4.2\n#CHROM POS'),/VCF/);
+ assert.throws(()=>parseDNA('PK\u0003\u0004zip'),/Extract/);
+ assert.equal(parseDNA('rs1 1 9007199254740993 AA').stats.malformed,1);
+});
+
+import { readFileSync } from 'node:fs';
+test('consumer-layout fixtures preserve quality counts and declared metadata', () => {
+ const four=parseDNA(readFileSync(new URL('./fixtures/synthetic-four-column.txt',import.meta.url),'utf8'));
+ const five=parseDNA(readFileSync(new URL('./fixtures/synthetic-five-column.csv',import.meta.url),'utf8'));
+ assert.equal(four.stats.uniqueMarkers,6); assert.equal(four.stats.noCalls,1);
+ assert.equal(five.stats.uniqueMarkers,4); assert.equal(five.stats.noCalls,1);
+ assert.equal(five.metadata.layout,'Five columns (separate alleles)');
+ assert.equal(five.metadata.build,'GRCh37');
+ assert.throws(()=>parseDNA(readFileSync(new URL('./fixtures/unsupported-vcf.txt',import.meta.url),'utf8')),/VCF/);
+});
+test('publication-filtered imports retain matching, traceable records', () => {
+ for (const source of catalogMetadata.studyImports) {
+  if (source.warning) continue;
+  const evidence=markers.flatMap(m=>m.evidence??[]).filter(e=>e.pmid===source.pubmedId);
+  assert.ok(evidence.length>0);
+  assert.ok(evidence.every(e=>e.pValue>0 && e.pValue<=5e-8));
+ }
+});

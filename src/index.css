@@ -1568,3 +1568,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline:3px solid #
 .marker-evidence { color:#c5d2d9; line-height:1.6; font-size:13px; margin:16px 0; overflow-wrap:anywhere; }
 .marker-evidence summary { cursor:pointer; color:#8ce0d4; }
 .marker-evidence a { color:#8ce0d4; text-decoration:underline; }
+.file-details { margin:20px 0; padding:18px; border:1px solid #3b5661; border-radius:12px; color:#c5d2d9; line-height:1.6; }
+.file-details summary { cursor:pointer; color:#8ce0d4; font-weight:600; }
+.file-details dl { display:grid; grid-template-columns:1fr 2fr; gap:8px 16px; }
+.file-details dt { font-weight:600; } .file-details dd { margin:0; }
+@media(max-width:600px) { .file-details dl { grid-template-columns:1fr; } }

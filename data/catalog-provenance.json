@@ -1,8 +1,8 @@
 {
-  "retrievedAt": "2026-10-29T23:27:20.490006+00:00",
+  "retrievedAt": "2026-10-30T00:50:28.146756+00:00",
   "source": "NHGRI-EBI GWAS Catalog API v2",
   "sourceUrl": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations",
-  "selection": "Union of previous bounded snapshot and up to the first 200 associations per exact trait query, p <= 5e-8, single-rsID non-interaction associations with publication IDs; deduplicated by rsID. Bounded, non-comprehensive snapshot; no individual predictions.",
+  "selection": "Union of prior bounded trait snapshots and publication-filtered study imports. Single-rsID non-interaction associations with p <= 5e-8 and verified publication/study identifiers. Not a comprehensive catalog or a validated prediction model.",
   "queries": [
     {
       "query": "Previous bounded snapshot",
@@ -143,6 +143,40 @@
       "warning": "No cached response; not fetched in offline mode"
     }
   ],
-  "markerCount": 446,
-  "associationCount": 514
+  "markerCount": 669,
+  "associationCount": 749,
+  "studyImports": [
+    {
+      "pubmedId": "30846698",
+      "category": "Sleep",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations?pubmed_id=30846698&size=500",
+      "acceptedAssociations": 87,
+      "returnedAssociations": 107,
+      "totalAvailable": 107
+    },
+    {
+      "pubmedId": "32059762",
+      "category": "Nutrition",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations?pubmed_id=32059762&size=500",
+      "acceptedAssociations": 134,
+      "returnedAssociations": 138,
+      "totalAvailable": 138
+    },
+    {
+      "pubmedId": "25288136",
+      "category": "Caffeine",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations?pubmed_id=25288136&size=500",
+      "acceptedAssociations": 8,
+      "returnedAssociations": 13,
+      "totalAvailable": 13
+    },
+    {
+      "pubmedId": "30223776",
+      "category": "Taste",
+      "url": "https://www.ebi.ac.uk/gwas/rest/api/v2/associations?pubmed_id=30223776&size=500",
+      "acceptedAssociations": 14,
+      "returnedAssociations": 17,
+      "totalAvailable": 17
+    }
+  ]
 }

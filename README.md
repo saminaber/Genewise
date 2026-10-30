@@ -19,7 +19,7 @@ Choose **Explore Sample Report** on the home page or **Try synthetic example** o
 
 ## Supported input
 
-Uncompressed TXT, TSV, whitespace-separated or simple CSV files under 20 MiB:
+Uncompressed TXT, TSV, whitespace-separated or single-line quoted CSV files under 20 MiB:
 
 ```text
 # rsid chromosome position genotype
@@ -35,11 +35,13 @@ rs4988235,2,136608646,C,T
 
 The parser skips blank/comment/header lines, checks rsIDs, chromosome identifiers and positive integer coordinates, and accepts diploid A/C/G/T SNP genotypes. It normalizes case and allele order without reverse-complementing or guessing strand. Missing calls such as `--` are retained separately. Repeated identical records are combined; duplicate markers with inconsistent coordinates or genotypes are flagged and excluded from observations. Quality totals expose skipped rows, no-call rows, duplicates and conflicts. Unique markers include uncalled/conflicted records, so the tracked-marker detection count is shown separately.
 
-Unsupported: ZIP, VCF, sequencing reads, indels, structural variants, haploid genotypes, full quoted CSV grammar, ancestry inference, clinical interpretation, genome-build conversion and strand harmonization. The 20 MiB limit bounds browser memory; parsing currently runs on the main thread.
+Unsupported: ZIP, VCF, sequencing reads, indels, structural variants, haploid genotypes, multiline CSV fields, ancestry inference, clinical interpretation, genome-build conversion and strand harmonization. The 20 MiB limit bounds browser memory; parsing runs in a dedicated browser worker, which is terminated after completion or cancellation.
 
 ## Architecture
 
-- `src/lib/dna.js`: pure parser, quality accounting, marker metadata and indexed report construction.
+- `src/lib/parser.js`: format validation, declared header metadata, deduplication and quality accounting.
+- `src/lib/dna.js`: marker metadata and indexed report construction.
+- `src/lib/file-reader.js` and `src/workers/dna.worker.js`: cancellable background parsing; only tracked marker rows return to the UI.
 - `src/App.jsx`: file lifecycle, explicit synthetic demo, report and JSON export.
 - `tests/dna.test.js`: Node built-in regression tests; no real personal genetic data.
 
@@ -66,20 +68,20 @@ This source update is prepared for review on the `codex/expand-marker-catalog` b
 
 ## Expanded marker catalog
 
-The current catalog has 465 unique markers across eight research categories. It combines 446 unique GWAS Catalog markers (514 recorded associations), the original educational markers and targeted primary-literature references. Overlapping rsIDs are merged; markers may appear in multiple categories. These are research references, not 465 validated personal findings.
+The current catalog has 686 unique markers across eight research categories. It combines 669 unique GWAS Catalog markers (749 recorded associations), the original educational markers and targeted primary-literature references. Overlapping rsIDs are merged; markers may appear in multiple categories. These are research references, not 686 validated personal findings.
 
 | Category | Catalog markers |
 | --- | ---: |
 | Caffeine | 19 |
-| Nutrition | 6 |
-| Sleep | 7 |
+| Nutrition | 140 |
+| Sleep | 91 |
 | Activity | 105 |
 | Pigmentation | 258 |
-| Taste | 4 |
+| Taste | 9 |
 | Body measurements | 57 |
 | Hair | 10 |
 
-Source: NHGRI-EBI GWAS Catalog API v2, bounded snapshots retrieved 2026-10-29. Each query requests up to the first 200 associations, retaining single-rsID, non-interaction associations with p <= 5e-8 and publication IDs. Original and targeted literature references use different inclusion criteria and are not claimed to meet that threshold. The catalog is not a complete variant database and does not calculate disease risks, personal trait predictions or genotype-directed treatment recommendations.
+Source: NHGRI-EBI GWAS Catalog API v2, bounded snapshots retrieved 2026-10-29 to 2026-10-30 UTC. Each query requests up to the first 200 associations, retaining single-rsID, non-interaction associations with p <= 5e-8 and publication IDs. Original and targeted literature references use different inclusion criteria and are not claimed to meet that threshold. The catalog is not a complete variant database and does not calculate disease risks, personal trait predictions or genotype-directed treatment recommendations.
 
 - `data/catalog-provenance.json`: query URLs, source counts, retrieval date and warnings for unavailable requests.
 - `src/lib/catalog.js`: imported associations, study IDs, PubMed IDs, mapped genes and reported traits.
@@ -104,3 +106,22 @@ python3 scripts/refresh-markers.py --offline
 The refresh fetches public reference data only, never personal genotypes. It uses three concurrent requests and a one-day local cache. Failed requests do not discard prior evidence. This refresh merges records; it does not automatically prune old or retracted associations. Review upstream changes before publication. A later run can produce a different count as upstream curation changes.
 
 Reports include per-category detection coverage, text search, category/status filters, 12-card pagination and expandable association sources. Export includes the entire catalog report regardless of active display filters. The six-row synthetic example is deliberately partial coverage, not a claim that every catalog marker is present.
+
+
+## Publication-filtered expansion
+
+`scripts/import-studies.py` merges GWAS Catalog records filtered to four verified primary publications: PMID 30846698 (sleep duration), 32059762 (vitamin D), 25288136 (coffee consumption), and 30223776 (bitter taste). It verifies the publication ID on every record, applies the single-marker and p-value filters, and deduplicates association IDs. `data/catalog-provenance.json` retains request URLs and returned/accepted counts. Use `python3 scripts/import-studies.py --fetch` to retrieve these public study records; without `--fetch`, the script uses locally cached responses. A missing cache is explicitly recorded, not treated as evidence that the study has no associations.
+
+## Upload workflow
+
+Header comments can declare a provider label, GRCh37/GRCh38 build and forward/reverse allele strand. These are reported as unverified file declarations. Multiple builds or strand directions produce warnings; no reference coordinate conversion or allele complementation occurs. Unknown metadata remains Unknown even when a provider name is present. Strict single-line CSV parsing preserves empty no-call fields and rejects malformed quotes. VCF and recognizable archive signatures receive explicit error messages.
+
+File text stays in a dedicated worker. The worker retains only tracked marker rows in its returned result and is terminated after completion or cancellation; the main thread keeps overall quality counts plus those tracked rows. Clearing data, loading the demo or selecting a replacement file cancels an outstanding import. JSON export includes header metadata alongside quality counts. The app does not claim secure memory erasure by the browser.
+
+Synthetic fixtures in `tests/fixtures/` cover four-column, quoted five-column, and unsupported VCF inputs. The four-column fixture was also imported through the browser worker and its metadata/report checked visually. These fixtures are fabricated test records, not genetic data from a person.
+
+Input-format references:
+- https://int.customercare.23andme.com/hc/en-us/articles/215983947-Raw-Genotype-Data-Technical-Details
+- https://help.ancestry.com/hc/en-us/articles/53933317283603-Downloading-DNA-Data
+
+This establishes support for the documented layouts using synthetic fixtures, not certification of every vendor version or validation of an individual DNA file.

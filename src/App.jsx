@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { parseDNA, buildReport, demoFile, MAX_FILE_BYTES, markers, filterReport, catalogMetadata } from "./lib/dna.js";
 
@@ -137,11 +137,18 @@ function SleepVisual() {
   );
 }
 
+import { readDNAFile } from './lib/file-reader.js';
+
 export default function App() {
   const [page, setPage] = useState("home");
   const [dataset, setDataset] = useState(null);
   const [isDemo, setIsDemo] = useState(false);
   const [loading, setLoading] = useState(false);
+  const importController = useRef(null);
+  useEffect(() => () => importController.current?.abort(), []);
+  function cancelImport() {
+    importController.current?.abort(); importController.current = null; setLoading(false);
+  }
   const rows = dataset?.rows ?? [];
   const [status, setStatus] = useState("Choose a file or try the synthetic example.");
   const [fileName, setFileName] = useState("No file loaded");
@@ -186,11 +193,13 @@ export default function App() {
   }
 
   function resetData() {
+    cancelImport();
     setDataset(null); setIsDemo(false); setFileName("No file loaded"); setResultPage(0);
     setStatus("Data cleared from this session.");
   }
 
   function loadDemo() {
+    cancelImport();
     setDataset(parseDNA(demoFile)); setIsDemo(true); setResultPage(0);
     setFileName("Synthetic example"); setStatus("Synthetic example loaded. This is not personal DNA.");
     setPage("report");
@@ -200,23 +209,28 @@ export default function App() {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
+    cancelImport();
     setDataset(null); setIsDemo(false); setFileName("No file loaded"); setResultPage(0);
     if (file.size > MAX_FILE_BYTES) { setStatus("File too large. Choose an uncompressed text file under 20 MB."); return; }
+    const controller = new AbortController(); importController.current = controller;
     setLoading(true);
     try {
-      const parsed = parseDNA(await file.text());
-      if (!parsed.rows.length) { setStatus("No supported SNP records found. Use a raw text export with rsID, chromosome, position and genotype columns."); return; }
+      const parsed = await readDNAFile(file, markers.map(m => m.rsid), controller.signal);
+      if (importController.current !== controller) return;
+      if (!parsed.stats.uniqueMarkers) { setStatus("No supported SNP records found. Use a raw text export with rsID, chromosome, position and genotype columns."); return; }
       setDataset(parsed); setFileName(file.name);
       setStatus(`Loaded ${parsed.stats.uniqueMarkers.toLocaleString()} unique markers. Review file quality below.`);
-    } catch {
-      setStatus("Unable to read this file. Try an uncompressed TXT, TSV or CSV export.");
-    } finally { setLoading(false); }
+    } catch (error) {
+      if (error.name !== "AbortError" && importController.current === controller) setStatus(error.message);
+    } finally {
+      if (importController.current === controller) { importController.current = null; setLoading(false); }
+    }
   }
 
   function exportReport() {
     const payload = { project: "GeneWise", version: 2, catalog: catalogMetadata, source: isDemo ? "synthetic example" : "user file",
       limitations: "Educational marker observations only; genome build and strand not verified; no phenotype predictions.",
-      quality: dataset.stats,
+      quality: dataset.stats, fileMetadata: dataset.metadata,
       markers: report.map(({rsid, gene, genotype, status, category, source, paper}) => ({rsid, gene, genotype, status, category, source, paper})) };
     const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], {type: "application/json"}));
     const link = document.createElement("a"); link.href = url; link.download = "genewise-marker-report.json";
@@ -506,8 +520,9 @@ export default function App() {
                       <span className="meta-label">Current file</span>
                       <strong>{fileName}</strong>
                     </div>
-                    <div className="status-box" role="status" aria-live="polite">{loading ? "Reading file…" : status}</div>
+                    <div className="status-box" role="status" aria-live="polite">{loading ? "Reading file locally…" : status}</div>
                     <div className="hero-actions">
+                      {loading && <button className="btn btn-secondary" onClick={() => {cancelImport(); setStatus("Import cancelled. No data was loaded.");}}>Cancel import</button>}
                       <button className="btn btn-secondary" disabled={loading} onClick={loadDemo}>Try synthetic example</button>
                       {dataset && <button className="btn btn-primary" disabled={loading} onClick={() => setPage("report")}>View report</button>}
                       {dataset && <button className="btn btn-secondary" disabled={loading} onClick={resetData}>Clear data</button>}
@@ -558,6 +573,7 @@ export default function App() {
                   <div><strong>{dataset.stats.conflicts}</strong><span>conflicting markers</span></div>
                   <div><strong>{dataset.stats.noCalls}</strong><span>no-call rows</span></div>
                 </div>
+                {dataset.metadata && <details className="file-details"><summary>File details and limitations</summary><dl><dt>Header label</dt><dd>{dataset.metadata.provider}</dd><dt>Declared genome build</dt><dd>{dataset.metadata.build}</dd><dt>Declared allele strand</dt><dd>{dataset.metadata.strand}</dd><dt>Detected layout</dt><dd>{dataset.metadata.layout}</dd></dl><ul>{dataset.metadata.warnings.map(w => <li key={w}>{w}</li>)}</ul></details>}
                 <p>Only supported SNP rows are counted. Identical duplicates are combined; conflicting duplicates are excluded. Strand orientation and genome build are not verified. No personal phenotype predictions are generated.</p>
                 <div className="hero-actions"><button className="btn btn-secondary" onClick={exportReport}>Download marker report</button><button className="btn btn-secondary" onClick={resetData}>Clear data</button></div>
               </div>
