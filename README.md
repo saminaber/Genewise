@@ -125,3 +125,10 @@ Input-format references:
 - https://help.ancestry.com/hc/en-us/articles/53933317283603-Downloading-DNA-Data
 
 This establishes support for the documented layouts using synthetic fixtures, not certification of every vendor version or validation of an individual DNA file.
+
+
+## Byte validation before parsing
+
+The upload worker inspects original file bytes before decoding. ZIP and gzip signatures receive extraction guidance, including when an archive has been renamed to `.txt`. Empty files, uploads over the 20 MiB limit, UTF-16 BOMs, invalid UTF-8 and NUL-containing binary data are rejected with specific messages. UTF-8 text and its optional BOM remain supported.
+
+The worker checks file size before reading its contents. It then uses `src/lib/file-decoder.js` for byte validation and strict decoding before invoking the SNP parser. Tests exercise real gzip-compressed synthetic data, ZIP signatures, malformed encodings and the actual worker handler; successful worker responses still contain only tracked marker rows.
