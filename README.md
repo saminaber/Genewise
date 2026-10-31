@@ -118,6 +118,8 @@ Header comments can declare a provider label, GRCh37/GRCh38 build and forward/re
 
 File text stays in a dedicated worker. The worker retains only tracked marker rows in its returned result and is terminated after completion or cancellation; the main thread keeps overall quality counts plus those tracked rows. Clearing data, loading the demo or selecting a replacement file cancels an outstanding import. JSON export includes header metadata alongside quality counts. The app does not claim secure memory erasure by the browser.
 
+Worker startup, message-transfer and message-decoding failures reject the import with guidance instead of leaving it pending. Every completion path removes event handlers and releases the worker; queued events after cancellation are ignored. `tests/file-reader.test.js` controls worker event order to cover cancellation, replacement imports and failure cleanup using synthetic placeholders. These lifecycle tests complement the actual-worker parsing tests; they do not simulate the React interface or certify every browser.
+
 Synthetic fixtures in `tests/fixtures/` cover four-column, quoted five-column, and unsupported VCF inputs. The four-column fixture was also imported through the browser worker and its metadata/report checked visually. These fixtures are fabricated test records, not genetic data from a person.
 
 Input-format references:
