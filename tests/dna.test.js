@@ -103,3 +103,32 @@ test('publication-filtered imports retain matching, traceable records', () => {
   assert.ok(evidence.every(e=>e.pValue>0 && e.pValue<=5e-8));
  }
 });
+
+test('TSV fixture preserves trailing empty no-calls and rejects shifted coordinates', () => {
+ const parsed=parseDNA(readFileSync(new URL('./fixtures/synthetic-empty-fields.tsv',import.meta.url),'utf8'));
+ assert.equal(parsed.stats.dataLines,4);
+ assert.equal(parsed.stats.validRows,3);
+ assert.equal(parsed.stats.noCalls,2);
+ assert.equal(parsed.stats.malformed,1);
+ assert.equal(parsed.stats.uniqueMarkers,3);
+ assert.equal(parsed.rows.find(row=>row.rsid==='rs4988235').genotype,null);
+ assert.ok(!parsed.rows.some(row=>row.rsid==='rs1'));
+ const report=buildReport(parsed.rows);
+ assert.equal(report.find(row=>row.rsid==='rs4988235').status,'No call');
+});
+
+test('five-column TSV retains empty allele fields without shifting values', () => {
+ const parsed=parseDNA('rs1\t1\t10\t\t\r\nrs2\t1\t20\tA\t\r\nrs3\t1\t30\t T \t C ');
+ assert.equal(parsed.stats.noCalls,1);
+ assert.equal(parsed.stats.malformed,1); // A single allele is unsupported, not guessed.
+ assert.deepEqual(parsed.rows.map(row=>[row.rsid,row.genotype]),[['rs1',null],['rs3','CT']]);
+ assert.equal(parsed.metadata.layout,'Five columns (separate alleles)');
+});
+
+test('empty TSV coordinate fields stay invalid and space-separated inputs still work', () => {
+ for (const line of ['rs1\t\t10\tAA','rs1\t1\t\tAA','\trs1\t1\t10\tAA']) {
+  assert.equal(parseDNA(line).stats.malformed,1);
+  assert.equal(parseDNA(line).rows.length,0);
+ }
+ assert.equal(parseDNA('  rs1   1  10   A/C  ').rows[0].genotype,'AC');
+});

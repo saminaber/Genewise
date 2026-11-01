@@ -35,6 +35,8 @@ rs4988235,2,136608646,C,T
 
 The parser skips blank/comment/header lines, checks rsIDs, chromosome identifiers and positive integer coordinates, and accepts diploid A/C/G/T SNP genotypes. It normalizes case and allele order without reverse-complementing or guessing strand. Missing calls such as `--` are retained separately. Repeated identical records are combined; duplicate markers with inconsistent coordinates or genotypes are flagged and excluded from observations. Quality totals expose skipped rows, no-call rows, duplicates and conflicts. Unique markers include uncalled/conflicted records, so the tracked-marker detection count is shown separately.
 
+TSV fields are separated by literal tabs, preserving empty fields and trailing empty genotype columns as no-calls. Missing chromosome or position fields remain invalid instead of shifting later fields into their places. Space-separated files still allow repeated spaces. A tab cannot also be used as cosmetic indentation; tabs define columns. Synthetic empty-field coverage is in `tests/fixtures/synthetic-empty-fields.tsv`.
+
 Unsupported: ZIP, VCF, sequencing reads, indels, structural variants, haploid genotypes, multiline CSV fields, ancestry inference, clinical interpretation, genome-build conversion and strand harmonization. The 20 MiB limit bounds browser memory; parsing runs in a dedicated browser worker, which is terminated after completion or cancellation.
 
 ## Architecture

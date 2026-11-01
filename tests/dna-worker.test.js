@@ -32,3 +32,14 @@ test('worker checks file size before requesting file bytes', async () => {
   assert.equal(read,false);
   assert.match(messages[0].error,/File too large/);
 });
+
+test('worker preserves empty TSV no-calls without accepting shifted fields', async () => {
+  messages.length=0;
+  const tsv=readFileSync(new URL('./fixtures/synthetic-empty-fields.tsv',import.meta.url));
+  await self.onmessage({data:{file:new File([tsv],'synthetic.tsv'),markerIds:['rs4988235','rs1']}});
+  const {result,error}=messages[0];
+  assert.equal(error,undefined);
+  assert.equal(result.stats.noCalls,2);
+  assert.equal(result.stats.malformed,1);
+  assert.deepEqual(result.rows.map(row=>[row.rsid,row.genotype]),[['rs4988235',null]]);
+});

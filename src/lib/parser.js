@@ -10,6 +10,8 @@ export function normalizeGenotype(value) {
 
 // Single-line CSV only; malformed quotes are rejected, not silently stripped.
 export function splitRecord(line) {
+  // Tabs delimit fields: repeated/trailing tabs may represent missing values.
+  if (!line.includes(',') && line.includes('\t')) return line.split('\t').map(field => field.trim());
   if (!line.includes(',')) return line.trim().split(/\s+/);
   const fields = []; let field = ''; let quoted = false; let closed = false;
   for (let i = 0; i < line.length; i++) {
@@ -51,7 +53,7 @@ export function parseDNA(text) {
       if (/\b(?:minus|reverse)\s*(?:\(-\))?\s*strand\b|\bstrand\s*[:=]\s*(?:minus|reverse|-)/i.test(trimmed)) strands.add('Reverse (-)');
       continue;
     }
-    const parts = splitRecord(trimmed);
+    const parts = splitRecord(line);
     if (parts && /^(rsid|snp|snp_id)$/i.test(parts[0])) continue;
     stats.dataLines++;
     if (!parts || ![4, 5].includes(parts.length) || !/^rs\d+$/i.test(parts[0]) ||
