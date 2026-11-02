@@ -33,6 +33,8 @@ rsid,chromosome,position,allele1,allele2
 rs4988235,2,136608646,C,T
 ```
 
+In five-column files, each called allele field must contain exactly one A/C/G/T base. A combined pair such as `AC` in one field with the other empty, a partial call, or a separator inside an allele field is rejected as malformed. Two missing allele fields are retained as a no-call (for example `0,0`, `N,N` or two empty fields). Four-column genotypes accept two bases, optionally separated by a single `/` or `|`; repeated, leading and trailing separators are rejected. Allele order is normalized, so separator support does not preserve or interpret phasing.
+
 The parser skips blank/comment/header lines, checks rsIDs, chromosome identifiers and positive integer coordinates, and accepts diploid A/C/G/T SNP genotypes. It normalizes case and allele order without reverse-complementing or guessing strand. Missing calls such as `--` are retained separately. Repeated identical records are combined; duplicate markers with inconsistent coordinates or genotypes are flagged and excluded from observations. Quality totals expose skipped rows, no-call rows, duplicates and conflicts. Unique markers include uncalled/conflicted records, so the tracked-marker detection count is shown separately.
 
 TSV fields are separated by literal tabs, preserving empty fields and trailing empty genotype columns as no-calls. Missing chromosome or position fields remain invalid instead of shifting later fields into their places. Space-separated files still allow repeated spaces. A tab cannot also be used as cosmetic indentation; tabs define columns. Synthetic empty-field coverage is in `tests/fixtures/synthetic-empty-fields.tsv`.

@@ -132,3 +132,32 @@ test('empty TSV coordinate fields stay invalid and space-separated inputs still 
  }
  assert.equal(parseDNA('  rs1   1  10   A/C  ').rows[0].genotype,'AC');
 });
+
+test('combined genotypes require exactly two bases and at most one internal separator', () => {
+ for (const value of ['AC','ca','A/C','C|A']) assert.equal(normalizeGenotype(value),'AC');
+ for (const value of ['A//C','A||C','/AC','AC/','|AC','AC|','A/|C','A/C/','A','AAC']) {
+  assert.equal(normalizeGenotype(value),undefined,value);
+  assert.equal(parseDNA(`rs1 1 10 ${value}`).stats.malformed,1,value);
+ }
+});
+
+test('separate allele fields cannot hide a combined genotype or delimiter', () => {
+ for (const [first,second] of [['AC',''],['','AC'],['A/','C'],['A','/C'],['A|','C'],['A','|C'],['A',''],['','C'],['A','0'],['N','C']]) {
+  for (const delimiter of [',','\t']) {
+   const parsed=parseDNA(['rs762551','15','10',first,second].join(delimiter));
+   assert.equal(parsed.stats.malformed,1,JSON.stringify([first,second,delimiter]));
+   assert.equal(parsed.rows.length,0);
+  }
+ }
+});
+
+test('separate alleles preserve valid calls and pairs of missing values', () => {
+ for (const [first,second] of [['a','c'],['C','A']]) {
+  assert.equal(parseDNA(`rs1,1,10,${first},${second}`).rows[0].genotype,'AC');
+ }
+ for (const [first,second] of [['0','0'],['-','-'],['N','N'],['',''],['.','.'],['NA','NA']]) {
+  const parsed=parseDNA(`rs1,1,10,${first},${second}`);
+  assert.equal(parsed.stats.noCalls,1,JSON.stringify([first,second]));
+  assert.equal(parsed.rows[0].genotype,null);
+ }
+});

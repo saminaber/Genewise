@@ -3,9 +3,17 @@ const noCalls = new Set(['--', '00', 'NN', 'N', 'NA', 'N/A', '.', './.', '']);
 export function normalizeGenotype(value) {
   const raw = String(value).trim().toUpperCase();
   if (noCalls.has(raw)) return null;
-  const alleles = raw.replace(/[|/]/g, '');
-  if (!/^[ACGT]{2}$/.test(alleles)) return undefined;
+  if (!/^[ACGT](?:[|/]?[ACGT])$/.test(raw)) return undefined;
+  const alleles = raw.replace(/[|/]/, '');
   return alleles.split('').sort().join('');
+}
+
+function normalizeAlleleColumns(first, second) {
+  const alleles = [first, second].map(value => value.trim().toUpperCase());
+  if (alleles.every(value => /^[ACGT]$/.test(value))) return normalizeGenotype(alleles.join(''));
+  // A pair of missing fields is a no-call; a partial or malformed pair is not a genotype.
+  if (alleles.every(value => noCalls.has(value) || value === '-' || value === '0')) return null;
+  return undefined;
 }
 
 // Single-line CSV only; malformed quotes are rejected, not silently stripped.
@@ -61,7 +69,7 @@ export function parseDNA(text) {
         !/^\d+$/.test(parts[2]) || !Number.isSafeInteger(Number(parts[2])) || Number(parts[2]) < 1) {
       stats.malformed++; continue;
     }
-    const genotype = normalizeGenotype(parts.length === 5 ? parts[3] + parts[4] : parts[3]);
+    const genotype = parts.length === 5 ? normalizeAlleleColumns(parts[3], parts[4]) : normalizeGenotype(parts[3]);
     if (genotype === undefined) { stats.malformed++; continue; }
     layouts.add(parts.length === 5 ? 'Five columns (separate alleles)' : 'Four columns (combined genotype)');
     stats.validRows++;

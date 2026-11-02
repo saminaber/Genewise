@@ -43,3 +43,14 @@ test('worker preserves empty TSV no-calls without accepting shifted fields', asy
   assert.equal(result.stats.malformed,1);
   assert.deepEqual(result.rows.map(row=>[row.rsid,row.genotype]),[['rs4988235',null]]);
 });
+
+test('worker excludes malformed allele pairs instead of constructing a detected genotype', async () => {
+  messages.length=0;
+  const file=new File(['rs762551,15,10,AC,\nrs4988235,2,20,A,C\nrs1,1,30,0,0'],'synthetic-alleles.csv');
+  await self.onmessage({data:{file,markerIds:['rs762551','rs4988235','rs1']}});
+  const {result,error}=messages[0];
+  assert.equal(error,undefined);
+  assert.equal(result.stats.malformed,1);
+  assert.equal(result.stats.noCalls,1);
+  assert.deepEqual(result.rows.map(row=>[row.rsid,row.genotype]),[['rs4988235','AC'],['rs1',null]]);
+});
