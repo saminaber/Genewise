@@ -506,12 +506,12 @@ export default function App() {
                   </div>
 
                   <h3>Choose a raw DNA text file</h3>
-                  <p className="upload-description">
+                  <p className="upload-description" id="dna-file-requirements">
                     TXT, TSV or CSV, up to 20 MB. ZIP, VCF, indels and haploid genotypes are not supported. Allele order is normalized; strand and genome build are not inferred.
                   </p>
 
                   <label className="file-input-wrap">
-                    <input type="file" accept=".txt,.csv,.tsv" disabled={loading} onChange={upload} />
+                    <input type="file" accept=".txt,.csv,.tsv" aria-describedby="dna-file-requirements" disabled={loading} onChange={upload} />
                     <span className="btn btn-primary">Choose File</span>
                   </label>
 
