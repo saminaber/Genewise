@@ -145,10 +145,26 @@ export default function App() {
   const [isDemo, setIsDemo] = useState(false);
   const [loading, setLoading] = useState(false);
   const importController = useRef(null);
+  const fileInput = useRef(null);
+  const restoreFileFocus = useRef(false);
+
+  useEffect(() => {
+    if (!loading && restoreFileFocus.current) {
+      restoreFileFocus.current = false;
+      fileInput.current?.focus();
+    }
+  }, [loading]);
+
   useEffect(() => () => importController.current?.abort(), []);
   function cancelImport() {
     importController.current?.abort(); importController.current = null; setLoading(false);
   }
+  function handleCancelImport() {
+    restoreFileFocus.current = true;
+    cancelImport();
+    setStatus("Import cancelled. No data was loaded.");
+  }
+
   const rows = dataset?.rows ?? [];
   const [status, setStatus] = useState("Choose a file or try the synthetic example.");
   const [fileName, setFileName] = useState("No file loaded");
@@ -511,7 +527,7 @@ export default function App() {
                   </p>
 
                   <label className="file-input-wrap">
-                    <input type="file" accept=".txt,.csv,.tsv" aria-describedby="dna-file-requirements" disabled={loading} onChange={upload} />
+                    <input ref={fileInput} type="file" accept=".txt,.csv,.tsv" aria-describedby="dna-file-requirements" disabled={loading} onChange={upload} />
                     <span className="btn btn-primary">Choose File</span>
                   </label>
 
@@ -522,7 +538,7 @@ export default function App() {
                     </div>
                     <div className="status-box" role="status" aria-live="polite">{loading ? "Reading file locally…" : status}</div>
                     <div className="hero-actions">
-                      {loading && <button className="btn btn-secondary" onClick={() => {cancelImport(); setStatus("Import cancelled. No data was loaded.");}}>Cancel import</button>}
+                      {loading && <button className="btn btn-secondary" onClick={handleCancelImport}>Cancel import</button>}
                       <button className="btn btn-secondary" disabled={loading} onClick={loadDemo}>Try synthetic example</button>
                       {dataset && <button className="btn btn-primary" disabled={loading} onClick={() => setPage("report")}>View report</button>}
                       {dataset && <button className="btn btn-secondary" disabled={loading} onClick={resetData}>Clear data</button>}
