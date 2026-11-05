@@ -111,6 +111,8 @@ The refresh fetches public reference data only, never personal genotypes. It use
 
 Reports include per-category detection coverage, text search, category/status filters, 12-card pagination and expandable association sources. Export includes the entire catalog report regardless of active display filters. The six-row synthetic example is deliberately partial coverage, not a claim that every catalog marker is present.
 
+JSON export schema version 3 retains each marker's category lists, available study and association records, primary-publication links, educational interpretation, observation explanation and next step. Existing marker fields, quality totals and declared file metadata are retained. The export includes the population-association limitations alongside the evidence. `src/lib/report-export.js` constructs the complete report directly from the dataset. Synthetic export tests check provenance, observation statuses and exclusion of untracked rows and input filenames.
+
 
 ## Publication-filtered expansion
 

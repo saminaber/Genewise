@@ -138,6 +138,7 @@ function SleepVisual() {
 }
 
 import { readDNAFile } from './lib/file-reader.js';
+import { buildReportExport } from './lib/report-export.js';
 
 export default function App() {
   const [page, setPage] = useState("home");
@@ -244,10 +245,7 @@ export default function App() {
   }
 
   function exportReport() {
-    const payload = { project: "GeneWise", version: 2, catalog: catalogMetadata, source: isDemo ? "synthetic example" : "user file",
-      limitations: "Educational marker observations only; genome build and strand not verified; no phenotype predictions.",
-      quality: dataset.stats, fileMetadata: dataset.metadata,
-      markers: report.map(({rsid, gene, genotype, status, category, source, paper}) => ({rsid, gene, genotype, status, category, source, paper})) };
+    const payload = buildReportExport(dataset, isDemo);
     const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], {type: "application/json"}));
     const link = document.createElement("a"); link.href = url; link.download = "genewise-marker-report.json";
     link.click(); URL.revokeObjectURL(url);
