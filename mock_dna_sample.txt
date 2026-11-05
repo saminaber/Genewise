@@ -1,6 +1,8 @@
-# Mock 23andMe-style file
+# GeneWise synthetic example; not a person's DNA
 # rsid chromosome position genotype
-rs762551 7 24966446 AC
+rs762551 15 75041917 AC
 rs4988235 2 136608646 CT
 rs1801260 4 56307853 TT
 rs1815739 11 66560624 CT
+rs12913832 15 28365618 AG
+rs174537 11 61571478 GG

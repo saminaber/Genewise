@@ -1,0 +1,6 @@
+# Synthetic TSV fixture; not personal genetic data.
+rsid	chromosome	position	genotype
+rs762551	15	75041917	AC
+rs4988235	2	136608646	
+rs12913832	15	28365618	--
+rs1		1	10	AA

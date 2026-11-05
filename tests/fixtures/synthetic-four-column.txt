@@ -1,0 +1,11 @@
+# GeneWise synthetic test fixture. NOT PERSONAL DNA.
+# 23andMe-style raw layout
+# reference human assembly build 37
+# genotype calls on the plus strand
+# rsid chromosome position genotype
+rs762551 15 75041917 CA
+rs4988235 2 136608646 AG
+rs2282679 4 72608383 GT
+rs713598 7 141673345 CG
+rs35333999 2 239187088 CT
+rs1 1 1 --

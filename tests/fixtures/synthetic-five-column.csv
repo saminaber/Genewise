@@ -1,0 +1,8 @@
+# GeneWise synthetic test fixture. NOT PERSONAL DNA.
+# AncestryDNA-style raw layout
+# GRCh37 forward strand
+"rsid","chromosome","position","allele1","allele2"
+"rs762551","15","75041917","A","C"
+"rs2282679","4","72608383","G","T"
+"rs713598","7","141673345","C","G"
+"rs1","1","1","0","0"
